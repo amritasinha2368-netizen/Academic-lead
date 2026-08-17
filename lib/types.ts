@@ -2,6 +2,7 @@ export type LeadStatus =
   | 'New' 
   | 'Assigned' 
   | 'Contacted' 
+  | 'Follow-up'
   | 'Interested' 
   | 'Counselling' 
   | 'Visit' 
@@ -147,8 +148,8 @@ export interface CampaignROI {
   qualifiedLeads: number;
   applications: number;
   admissions: number;
-  cpl: number; // Cost Per Lead
-  cac: number; // Customer Acquisition Cost
+  cpl: number;
+  cac: number;
   roiPercent: number;
 }
 
@@ -205,7 +206,7 @@ export interface Lead {
   lostReason?: LostReason;
   lostReasonNotes?: string;
   escalatedToManager?: boolean;
-  aiLeadScore?: number; // 0 - 100 conversion probability
+  aiLeadScore?: number;
   ackSent?: {
     email: boolean;
     sms: boolean;

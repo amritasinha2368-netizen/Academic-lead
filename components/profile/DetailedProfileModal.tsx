@@ -208,7 +208,7 @@ export const DetailedProfileModal: React.FC<DetailedProfileModalProps> = ({ lead
                   </div>
                 </div>
 
-                {!currentLead.enrolledStudentId && currentRole !== 'Viewer' && (
+                {!currentLead.enrolledStudentId && (
                   <button
                     onClick={() => convertLeadToStudent(currentLead.id)}
                     className="w-full py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold rounded-xl shadow-md"

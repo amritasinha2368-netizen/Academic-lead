@@ -1,7 +1,6 @@
 import { Lead, LeadStatus, DuplicateCheckResult, ActivityLog } from './types';
 import { INITIAL_LEADS, COUNSELLORS } from './mock-data';
 
-// Server-side in-memory & file storage database instance
 let serverLeadsDb: Lead[] = [...INITIAL_LEADS];
 
 export function getServerLeads(filters?: {
@@ -122,6 +121,7 @@ export function createServerLead(newLeadData: Partial<Lead>): { lead: Lead; dupl
     documents: [],
     payments: [],
     scheduledCalls: [],
+    callRecordings: [],
   };
 
   serverLeadsDb = [newLead, ...serverLeadsDb];

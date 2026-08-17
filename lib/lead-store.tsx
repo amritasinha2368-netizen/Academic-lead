@@ -92,7 +92,7 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [selectedLeadIds, setSelectedLeadIds] = useState<string[]>([]);
   
   // Role & User Context
-  const [currentRole, setCurrentRole] = useState<UserRole>('Admin');
+  const [currentRole, setCurrentRole] = useState<UserRole>('Super Admin');
   const [activeCounsellorId, setActiveCounsellorId] = useState<string>('counsellor-1');
 
   // Modals state
@@ -244,9 +244,9 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
       documents: [],
       payments: [],
       scheduledCalls: [],
+      callRecordings: [],
     };
 
-    // Async REST API Call to Server Route POST /api/leads
     fetch('/api/leads', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -267,12 +267,6 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateLeadStatus = (id: string, newStatus: LeadStatus) => {
-    if (currentRole === 'Viewer') {
-      alert('Read-Only Mode: Viewers cannot modify lead status.');
-      return;
-    }
-
-    // Async REST API Call to Server Route PATCH /api/leads/[id]
     fetch(`/api/leads/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -285,7 +279,7 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const newActivity: ActivityLog = {
             id: `act-${Date.now()}`,
             type: 'Status Change',
-            author: currentRole === 'Counsellor' ? 'Sarah Jenkins' : 'Admin Staff',
+            author: currentRole === 'Counsellor' ? 'Sarah Jenkins' : 'CRM Manager',
             message: `Changed status from ${lead.status} to ${newStatus}.`,
             timestamp: new Date().toISOString(),
           };
@@ -301,7 +295,6 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const assignCounsellor = (id: string, counsellorId: string) => {
-    if (currentRole === 'Viewer') return;
     const counsellorName = COUNSELLORS.find((c) => c.id === counsellorId)?.name || 'Unassigned';
     
     fetch(`/api/leads/${id}`, {
@@ -332,8 +325,6 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const bulkUpdateStatus = (ids: string[], newStatus: LeadStatus) => {
-    if (currentRole === 'Viewer') return;
-
     fetch('/api/leads/bulk', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -363,7 +354,6 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const bulkAssignCounsellor = (ids: string[], counsellorId: string) => {
-    if (currentRole === 'Viewer') return;
     const counsellorName = COUNSELLORS.find((c) => c.id === counsellorId)?.name || 'Unassigned';
     setLeads((prev) =>
       prev.map((lead) => {
@@ -388,8 +378,6 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const deleteLead = (id: string) => {
-    if (currentRole === 'Viewer') return;
-
     fetch(`/api/leads/${id}`, {
       method: 'DELETE',
     }).catch((err) => console.log('Delete API call:', err));
@@ -399,7 +387,6 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const addLeadNote = (id: string, noteText: string, author: string = 'Staff Counsellor') => {
-    if (currentRole === 'Viewer') return;
     setLeads((prev) =>
       prev.map((lead) => {
         if (lead.id === id) {
@@ -422,7 +409,6 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const convertLeadToStudent = (id: string) => {
-    if (currentRole === 'Viewer') return;
     const studentId = `STU-2026-${Math.floor(100 + Math.random() * 900)}`;
     setLeads((prev) =>
       prev.map((lead) => {
@@ -447,7 +433,6 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const addScheduledCall = (leadId: string, date: string, time: string, notes: string) => {
-    if (currentRole === 'Viewer') return;
     const newCall: ScheduledCall = {
       id: `call-${Date.now()}`,
       scheduledDate: date,
@@ -608,12 +593,10 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const getFilteredLeads = () => {
     return leads.filter((lead) => {
-      // Role-based Access Control (Counsellors see only assigned leads)
       if (currentRole === 'Counsellor' && lead.assignedCounsellorId !== activeCounsellorId) {
         return false;
       }
 
-      // Search query match
       if (filters.searchQuery.trim() !== '') {
         const query = filters.searchQuery.toLowerCase();
         const nameMatch = lead.name.toLowerCase().includes(query);
