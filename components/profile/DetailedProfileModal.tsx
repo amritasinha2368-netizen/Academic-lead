@@ -15,7 +15,8 @@ import {
   IconMessageSquare, 
   IconDownload, 
   IconCheckCircle, 
-  IconSparkles 
+  IconSparkles,
+  IconTag
 } from '@/components/ui/Icons';
 
 interface DetailedProfileModalProps {
@@ -108,7 +109,7 @@ export const DetailedProfileModal: React.FC<DetailedProfileModalProps> = ({ lead
   return (
     <div className="fixed inset-0 z-50 overflow-hidden bg-slate-950/70 backdrop-blur-sm flex justify-end">
       
-      {/* HubSpot Style Slide-Over Right Drawer */}
+      {/* Slide-Over Right Drawer */}
       <div className="w-full max-w-2xl bg-slate-900 border-l border-slate-800 h-full flex flex-col shadow-2xl animate-slideInRight text-slate-100">
         
         {/* Drawer Header */}
@@ -127,7 +128,7 @@ export const DetailedProfileModal: React.FC<DetailedProfileModalProps> = ({ lead
                 )}
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Added {formatDateString(currentLead.dateAdded)} • <span className="text-blue-400 font-semibold">{currentLead.source}</span>
+                Added {formatDateString(currentLead.dateAdded)} • Channel: <span className="text-blue-400 font-semibold">{currentLead.source}</span>
               </p>
             </div>
           </div>
@@ -216,6 +217,21 @@ export const DetailedProfileModal: React.FC<DetailedProfileModalProps> = ({ lead
                     Convert Lead to Enrolled Student
                   </button>
                 )}
+              </div>
+
+              {/* Channel & UTM Origin Attribution */}
+              <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
+                <h3 className="font-bold text-white uppercase text-[11px] border-b border-slate-800 pb-2 flex items-center space-x-1.5">
+                  <IconTag className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>Lead Origin & Campaign Attribution</span>
+                </h3>
+                <div className="grid grid-cols-2 gap-2 pt-1 text-slate-300">
+                  <div><span className="text-slate-500">Traffic Source:</span> <span className="font-bold text-indigo-400">{currentLead.source}</span></div>
+                  <div><span className="text-slate-500">Entry Form:</span> <span className="text-white">{currentLead.entryPoint}</span></div>
+                  <div><span className="text-slate-500">utm_source:</span> <span className="font-mono text-slate-200">{currentLead.utmSource || 'website'}</span></div>
+                  <div><span className="text-slate-500">utm_medium:</span> <span className="font-mono text-slate-200">{currentLead.utmMedium || 'cpc'}</span></div>
+                  <div><span className="text-slate-500">utm_campaign:</span> <span className="font-mono text-slate-200">{currentLead.utmCampaign || 'organic'}</span></div>
+                </div>
               </div>
 
               {/* Personal Details */}

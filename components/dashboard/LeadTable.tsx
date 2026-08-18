@@ -11,7 +11,11 @@ import {
   IconEye, 
   IconTrash, 
   IconTag,
-  IconGraduationCap
+  IconInstagram,
+  IconGoogle,
+  IconGlobe,
+  IconSparkles,
+  IconFileText
 } from '@/components/ui/Icons';
 
 interface LeadTableProps {
@@ -60,6 +64,55 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
     }
   };
 
+  const renderChannelBadge = (source: string) => {
+    if (source.includes('Instagram') || source.includes('Meta')) {
+      return (
+        <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-pink-500/10 text-pink-400 border border-pink-500/30">
+          <IconInstagram className="w-3.5 h-3.5 text-pink-400 shrink-0" />
+          <span>Instagram</span>
+        </span>
+      );
+    }
+    if (source.includes('Google')) {
+      return (
+        <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-sky-500/10 text-sky-400 border border-sky-500/30">
+          <IconGoogle className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+          <span>Google Ads</span>
+        </span>
+      );
+    }
+    if (source.includes('Homepage') || source.includes('Website')) {
+      return (
+        <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/30">
+          <IconGlobe className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+          <span>Website</span>
+        </span>
+      );
+    }
+    if (source.includes('Brochure')) {
+      return (
+        <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30">
+          <IconFileText className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+          <span>Brochure Gate</span>
+        </span>
+      );
+    }
+    if (source.includes('Chatbot')) {
+      return (
+        <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-purple-500/10 text-purple-400 border border-purple-500/30">
+          <IconSparkles className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+          <span>AI Chatbot</span>
+        </span>
+      );
+    }
+    return (
+      <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+        <IconTag className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+        <span>{source}</span>
+      </span>
+    );
+  };
+
   return (
     <div className="clean-card overflow-hidden">
       
@@ -81,7 +134,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
               <th scope="col" className="py-3.5 px-4 min-w-[200px]">Student / Contact</th>
               <th scope="col" className="py-3.5 px-4 min-w-[190px]">Course Program</th>
               <th scope="col" className="py-3.5 px-4 min-w-[130px]">Pipeline Stage</th>
-              <th scope="col" className="py-3.5 px-4 min-w-[120px]">Source</th>
+              <th scope="col" className="py-3.5 px-4 min-w-[150px]">Lead Channel / Origin</th>
               <th scope="col" className="py-3.5 px-4 min-w-[150px]">Assigned Counsellor</th>
               <th scope="col" className="py-3.5 px-4 min-w-[120px]">Enquiry Date</th>
               <th scope="col" className="py-3.5 px-4 text-right min-w-[90px]">Actions</th>
@@ -183,9 +236,9 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
                       </select>
                     </td>
 
-                    {/* Source */}
-                    <td className="py-3 px-4 text-xs font-medium text-slate-300">
-                      {lead.source}
+                    {/* Lead Channel / Origin */}
+                    <td className="py-3 px-4">
+                      {renderChannelBadge(lead.source)}
                     </td>
 
                     {/* Assigned Counsellor */}
@@ -275,7 +328,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
             <button
               onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
               disabled={currentPage === totalPages}
-              className="px-2 py-1 bg-slate-800 text-slate-300 rounded disabled:opacity-40 hover:bg-slate-700 text-xs"
+              className="px-2.5 py-1 bg-slate-800 text-slate-300 rounded disabled:opacity-40 hover:bg-slate-700 text-xs"
             >
               Next
             </button>
