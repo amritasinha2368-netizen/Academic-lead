@@ -107,7 +107,7 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [kanbanViewMode, setKanbanViewMode] = useState<'board' | 'table'>('table');
   const [selectedLeadIds, setSelectedLeadIds] = useState<string[]>([]);
   
-  // Theme Mode
+  // Theme Mode - Light by Default
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   // Role & User Context
@@ -145,6 +145,8 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setTheme(savedTheme);
         if (savedTheme === 'dark') document.documentElement.classList.add('dark');
         else document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
       }
     } catch (e) {
       console.error('Failed to load leads from storage', e);

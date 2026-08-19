@@ -30,25 +30,24 @@ import { WebsiteSimulator } from '@/components/capture/WebsiteSimulator';
 
 export default function Home() {
   const { 
-    currentRole, 
     lastAckModal, 
     activeDuplicateReview, 
     activeDialerLead,
     activeMessageComposer
   } = useLeadStore();
 
-  const [activeTab, setActiveTab] = useState<string>('dashboard');
+  const [activeTab, setActiveTab] = useState<string>('leads');
   const [selectedProfileLead, setSelectedProfileLead] = useState<Lead | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isBulkMessageOpen, setIsBulkMessageOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-white flex overflow-hidden font-sans transition-colors">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex overflow-hidden font-sans transition-colors">
       
       {/* Left Navigation Sidebar */}
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      {/* Main Content Workspace Area */}
+      {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         
         {/* Top Header */}
@@ -58,73 +57,81 @@ export default function Home() {
           setActiveTab={setActiveTab} 
         />
 
-        {/* Workspace Body Scroll Area */}
+        {/* Dedicated Page Scroll Area */}
         <main className="flex-1 overflow-y-auto p-6 space-y-6">
           
-          {/* Overview Dashboard Tab */}
-          {activeTab === 'dashboard' && (
+          {/* Page 1: Leads & Enquiries Master View */}
+          {activeTab === 'leads' && (
             <div className="space-y-6 animate-fadeIn">
-              {/* Hero KPI Summary Cards */}
+              {/* Summary Stats Strip */}
               <KPICards />
 
-              {/* Master Lead Datatable & Filters */}
+              {/* Master Data Table & Filters */}
               <div className="space-y-4">
                 <LeadFilters />
                 <LeadTable onSelectLeadDetail={(lead) => setSelectedProfileLead(lead)} />
               </div>
-
-              {/* Manager Escalation Queue & Call QA Scorecard */}
-              {(currentRole === 'Team Leader' || currentRole === 'Super Admin') && (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
-                  <EscalationQueue />
-                  <AICallScoring />
-                </div>
-              )}
             </div>
           )}
 
-          {/* Kanban Pipeline Tab */}
+          {/* Page 2: Kanban Pipeline View */}
           {activeTab === 'pipeline' && (
             <div className="animate-fadeIn space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-200">
                 <div>
-                  <h1 className="text-xl font-black text-slate-900 dark:text-white">Pipeline Stage Board</h1>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">Drag and drop leads through stages</p>
+                  <h1 className="text-xl font-extrabold text-slate-900">Lead Pipeline Board</h1>
+                  <p className="text-xs text-slate-500 font-medium">Visual drag-and-drop stage tracking</p>
                 </div>
               </div>
               <LeadKanban onSelectLeadDetail={(lead) => setSelectedProfileLead(lead)} />
             </div>
           )}
 
-          {/* Telephony & AI Calls View */}
+          {/* Page 3: Manager QA & Escalation Queue */}
+          {activeTab === 'manager' && (
+            <div className="animate-fadeIn space-y-6">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                <div>
+                  <h1 className="text-xl font-extrabold text-slate-900">Manager Quality & Escalation Hub</h1>
+                  <p className="text-xs text-slate-500 font-medium">Review stalled leads and AI call scorecards</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <EscalationQueue />
+                <AICallScoring />
+              </div>
+            </div>
+          )}
+
+          {/* Page 4: Telephony & AI Call Logs */}
           {activeTab === 'telephony' && (
             <div className="animate-fadeIn">
               <AnalyticsDashboard />
             </div>
           )}
 
-          {/* Marketing & ROI View */}
+          {/* Page 5: Marketing ROI & Attribution */}
           {activeTab === 'marketing' && (
             <div className="animate-fadeIn">
               <CampaignROIDashboard />
             </div>
           )}
 
-          {/* Document Vault View */}
+          {/* Page 6: Document Vault & Payments */}
           {activeTab === 'documents' && (
             <div className="animate-fadeIn">
               <DocumentVault />
             </div>
           )}
 
-          {/* System Audit Trail View */}
+          {/* Page 7: Audit Logs */}
           {activeTab === 'audit' && (
             <div className="animate-fadeIn">
               <AuditTrail />
             </div>
           )}
 
-          {/* Public Website Simulator Sandbox */}
+          {/* Page 8: Website Simulator Sandbox */}
           {activeTab === 'sandbox' && (
             <div className="animate-fadeIn">
               <WebsiteSimulator />
