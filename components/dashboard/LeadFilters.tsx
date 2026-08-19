@@ -35,14 +35,14 @@ export const LeadFilters: React.FC = () => {
   ];
 
   return (
-    <div className="clean-card p-3.5 space-y-3">
+    <div className="clean-surface p-4 space-y-3">
       
-      {/* Top Search & Reset Row */}
+      {/* Search & Filters Container */}
       <div className="flex flex-col sm:flex-row items-center gap-3">
         
         {/* Search Bar */}
         <div className="relative flex-1 w-full">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
             <IconSearch className="w-4 h-4" />
           </div>
           <input
@@ -50,30 +50,28 @@ export const LeadFilters: React.FC = () => {
             value={filters.searchQuery}
             onChange={(e) => setFilters((prev) => ({ ...prev, searchQuery: e.target.value }))}
             placeholder="Search leads by name, phone, email, or city..."
-            className="w-full pl-9 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
+            className="w-full pl-9 pr-4 py-2 bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
           />
         </div>
 
-        {/* Filter Dropdowns */}
+        {/* Filter Selectors */}
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           
-          {/* Status Dropdown */}
           <select
             value={filters.status}
             onChange={(e) => setFilters((prev) => ({ ...prev, status: e.target.value as any }))}
-            className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300 font-medium focus:outline-none focus:border-indigo-500"
+            className="px-3 py-2 bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-700 dark:text-slate-300 font-medium focus:outline-none focus:border-indigo-500"
           >
-            <option value="All">All Pipeline Statuses</option>
+            <option value="All">All Statuses</option>
             {STATUSES.map((s) => (
               <option key={s} value={s}>{s}</option>
             ))}
           </select>
 
-          {/* Course Dropdown */}
           <select
             value={filters.course}
             onChange={(e) => setFilters((prev) => ({ ...prev, course: e.target.value }))}
-            className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300 font-medium focus:outline-none focus:border-indigo-500"
+            className="px-3 py-2 bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-700 dark:text-slate-300 font-medium focus:outline-none focus:border-indigo-500"
           >
             <option value="All">All Courses</option>
             {COURSES.map((c) => (
@@ -81,46 +79,42 @@ export const LeadFilters: React.FC = () => {
             ))}
           </select>
 
-          {/* Source Dropdown */}
           <select
             value={filters.source}
             onChange={(e) => setFilters((prev) => ({ ...prev, source: e.target.value as any }))}
-            className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300 font-medium focus:outline-none focus:border-indigo-500"
+            className="px-3 py-2 bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-700 dark:text-slate-300 font-medium focus:outline-none focus:border-indigo-500"
           >
-            <option value="All">All Sources</option>
+            <option value="All">All Channels</option>
             {SOURCES.map((src) => (
               <option key={src} value={src}>{src}</option>
             ))}
           </select>
 
-          {/* Counsellor Dropdown */}
           <select
             value={filters.counsellorId}
             onChange={(e) => setFilters((prev) => ({ ...prev, counsellorId: e.target.value }))}
-            className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300 font-medium focus:outline-none focus:border-indigo-500"
+            className="px-3 py-2 bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-700 dark:text-slate-300 font-medium focus:outline-none focus:border-indigo-500"
           >
-            <option value="All">All Counsellors</option>
+            <option value="All">All Staff</option>
             {counsellors.map((c) => (
               <option key={c.id} value={c.id}>{c.name}</option>
             ))}
           </select>
 
-          {/* Duplicate Toggle Pill */}
           <button
             onClick={() => setFilters((prev) => ({ ...prev, duplicateOnly: !prev.duplicateOnly }))}
             className={`px-3 py-2 rounded-xl text-xs font-bold transition-all border ${
               filters.duplicateOnly
-                ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
-                : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200'
+                ? 'bg-rose-500/20 text-rose-600 dark:text-rose-300 border-rose-500/40'
+                : 'bg-slate-100 dark:bg-slate-950 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800'
             }`}
           >
-            Duplicates Only
+            Duplicates
           </button>
 
-          {/* Reset Filters */}
           <button
             onClick={resetFilters}
-            className="px-3 py-2 text-xs font-medium text-slate-400 hover:text-white bg-slate-900 rounded-xl border border-slate-800 transition-colors"
+            className="px-3 py-2 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-200 dark:bg-slate-800 rounded-xl transition-colors"
           >
             Reset
           </button>

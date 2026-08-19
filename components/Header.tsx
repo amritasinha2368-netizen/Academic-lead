@@ -8,8 +8,8 @@ import {
   IconPlus, 
   IconAlertTriangle, 
   IconRefreshCw, 
-  IconUsers,
-  IconShieldCheck
+  IconSun,
+  IconMoon
 } from '@/components/ui/Icons';
 
 interface HeaderProps {
@@ -23,7 +23,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddModal, activeTab, setAc
     allLeadsUnfiltered,
     resetData,
     currentRole,
-    setCurrentRole
+    setCurrentRole,
+    theme,
+    toggleTheme
   } = useLeadStore();
 
   const [showNotifications, setShowNotifications] = useState(false);
@@ -36,28 +38,47 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddModal, activeTab, setAc
   const totalNotifications = overdueCount + escalatedCount;
 
   return (
-    <header className="h-16 bg-slate-900 border-b border-slate-800 px-4 sm:px-6 flex items-center justify-between shrink-0">
+    <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 sm:px-6 flex items-center justify-between shrink-0 transition-colors">
       
-      {/* Search Input */}
+      {/* Search Bar */}
       <div className="flex items-center space-x-3 flex-1 max-w-md">
         <div className="relative w-full">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
             <IconSearch className="w-4 h-4" />
           </div>
           <input
             type="text"
             placeholder="Search leads, calls, documents (Cmd + K)..."
-            className="w-full pl-9 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
+            className="w-full pl-9 pr-4 py-2 bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
           />
         </div>
       </div>
 
-      {/* Header Actions */}
-      <div className="flex items-center space-x-3">
+      {/* Header Action Controls */}
+      <div className="flex items-center space-x-2.5">
         
-        {/* Role Switcher Selector */}
-        <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-xs">
-          <span className="text-[10px] text-slate-400 font-bold uppercase hidden sm:inline">Role:</span>
+        {/* Light / Dark Mode Toggle Button */}
+        <button
+          onClick={toggleTheme}
+          className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-800 transition-all flex items-center space-x-1 text-xs font-semibold"
+          title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
+        >
+          {theme === 'light' ? (
+            <>
+              <IconMoon className="w-4 h-4 text-slate-700" />
+              <span className="hidden md:inline">Dark</span>
+            </>
+          ) : (
+            <>
+              <IconSun className="w-4 h-4 text-amber-400" />
+              <span className="hidden md:inline">Light</span>
+            </>
+          )}
+        </button>
+
+        {/* Role Switcher */}
+        <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs">
+          <span className="text-[10px] text-slate-500 font-bold uppercase hidden sm:inline">Role:</span>
           <select
             value={currentRole}
             onChange={(e) => {
@@ -69,13 +90,13 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddModal, activeTab, setAc
               else if (r === 'Finance') setActiveTab('documents');
               else if (r === 'Super Admin') setActiveTab('audit');
             }}
-            className="bg-transparent text-xs font-bold text-blue-400 focus:outline-none cursor-pointer"
+            className="bg-transparent text-xs font-bold text-indigo-600 dark:text-indigo-400 focus:outline-none cursor-pointer"
           >
-            <option value="Super Admin" className="bg-slate-900 text-slate-200">Super Admin</option>
-            <option value="Team Leader" className="bg-slate-900 text-slate-200">Team Leader</option>
-            <option value="Counsellor" className="bg-slate-900 text-slate-200">Counsellor</option>
-            <option value="Marketing Admin" className="bg-slate-900 text-slate-200">Marketing Admin</option>
-            <option value="Finance" className="bg-slate-900 text-slate-200">Admissions / Finance</option>
+            <option value="Super Admin" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200">Super Admin</option>
+            <option value="Team Leader" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200">Team Leader</option>
+            <option value="Counsellor" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200">Counsellor</option>
+            <option value="Marketing Admin" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200">Marketing Admin</option>
+            <option value="Finance" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200">Admissions / Finance</option>
           </select>
         </div>
 
@@ -83,10 +104,10 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddModal, activeTab, setAc
         <div className="relative">
           <button
             onClick={() => setShowNotifications(!showNotifications)}
-            className="p-2 text-slate-400 hover:text-white bg-slate-950 border border-slate-800 rounded-xl relative transition-all"
+            className="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-xl relative transition-all"
             title="Notifications"
           >
-            <IconAlertTriangle className="w-4 h-4 text-amber-400" />
+            <IconAlertTriangle className="w-4 h-4 text-amber-500" />
             {totalNotifications > 0 && (
               <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-rose-600 text-white text-[9px] font-bold flex items-center justify-center">
                 {totalNotifications}
@@ -94,22 +115,22 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddModal, activeTab, setAc
             )}
           </button>
 
-          {/* Notification Popover */}
+          {/* Popover */}
           {showNotifications && (
-            <div className="absolute right-0 mt-2 w-72 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-3 z-50 text-xs space-y-2 animate-fadeIn">
-              <div className="font-bold text-white border-b border-slate-800 pb-2 flex items-center justify-between">
-                <span>Alerts</span>
-                <span className="text-[10px] text-rose-400 font-mono">{totalNotifications} Active</span>
+            <div className="absolute right-0 mt-2 w-72 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-3 z-50 text-xs space-y-2 animate-fadeIn">
+              <div className="font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-2 flex items-center justify-between">
+                <span>Notifications</span>
+                <span className="text-[10px] text-rose-500 font-mono">{totalNotifications} Active</span>
               </div>
 
               {overdueCount > 0 && (
-                <div className="p-2 rounded-xl bg-amber-950/30 border border-amber-500/30 text-amber-300 text-[11px]">
+                <div className="p-2 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-500/30 text-amber-700 dark:text-amber-300 text-[11px]">
                   <strong>{overdueCount} Overdue Follow-up Calls</strong> in queue.
                 </div>
               )}
 
               {escalatedCount > 0 && (
-                <div className="p-2 rounded-xl bg-rose-950/30 border border-rose-500/30 text-rose-300 text-[11px]">
+                <div className="p-2 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 text-[11px]">
                   <strong>{escalatedCount} Stalled Leads Escalated</strong> to Manager.
                 </div>
               )}
@@ -120,7 +141,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddModal, activeTab, setAc
         {/* Primary Action Button */}
         <button
           onClick={onOpenAddModal}
-          className="flex items-center space-x-1.5 px-3.5 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 rounded-xl shadow-md transition-all"
+          className="flex items-center space-x-1.5 px-3.5 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl shadow-sm transition-all"
         >
           <IconPlus className="w-4 h-4" />
           <span className="hidden sm:inline">Add Lead</span>
@@ -129,9 +150,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddModal, activeTab, setAc
         {/* Reset Dataset */}
         <button
           onClick={() => {
-            if (confirm('Reset dataset to initial state?')) resetData();
+            if (confirm('Reset dataset to initial clean state?')) resetData();
           }}
-          className="p-2 text-slate-400 hover:text-slate-200 bg-slate-950 rounded-xl border border-slate-800 transition-colors"
+          className="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-800 transition-colors"
           title="Reset Dataset"
         >
           <IconRefreshCw className="w-4 h-4" />

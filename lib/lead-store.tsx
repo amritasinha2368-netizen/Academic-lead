@@ -25,6 +25,10 @@ interface LeadContextType {
   kanbanViewMode: 'board' | 'table';
   setKanbanViewMode: (mode: 'board' | 'table') => void;
   
+  // Theme state
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
+
   // Role Access Control (RBAC)
   currentRole: UserRole;
   setCurrentRole: (role: UserRole) => void;
@@ -83,6 +87,7 @@ interface LeadContextType {
 const LeadContext = createContext<LeadContextType | undefined>(undefined);
 
 const STORAGE_KEY = 'aura_academy_leads_v2';
+const THEME_KEY = 'aura_crm_theme';
 
 export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [leads, setLeads] = useState<Lead[]>(INITIAL_LEADS);
@@ -91,6 +96,9 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [kanbanViewMode, setKanbanViewMode] = useState<'board' | 'table'>('table');
   const [selectedLeadIds, setSelectedLeadIds] = useState<string[]>([]);
   
+  // Theme Mode
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
   // Role & User Context
   const [currentRole, setCurrentRole] = useState<UserRole>('Super Admin');
   const [activeCounsellorId, setActiveCounsellorId] = useState<string>('counsellor-1');
@@ -118,6 +126,12 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (saved) {
         setLeads(JSON.parse(saved));
       }
+      const savedTheme = localStorage.getItem(THEME_KEY) as 'light' | 'dark';
+      if (savedTheme) {
+        setTheme(savedTheme);
+        if (savedTheme === 'dark') document.documentElement.classList.add('dark');
+        else document.documentElement.classList.remove('dark');
+      }
     } catch (e) {
       console.error('Failed to load leads from storage', e);
     }
@@ -130,6 +144,17 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('Failed to save leads to storage', e);
     }
   }, [leads]);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(nextTheme);
+    localStorage.setItem(THEME_KEY, nextTheme);
+    if (nextTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
 
   const resetFilters = () => {
     setFilters({
@@ -627,6 +652,8 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setActiveView,
         kanbanViewMode,
         setKanbanViewMode,
+        theme,
+        toggleTheme,
         currentRole,
         setCurrentRole,
         activeCounsellorId,

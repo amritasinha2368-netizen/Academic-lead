@@ -2,19 +2,36 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-@layer base {
-  body {
-    background-color: #f8fafc;
-    color: #0f172a;
-    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    overflow-x: hidden;
-  }
+:root {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --border-color: #e2e8f0;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --accent-color: #4f46e5;
+  --shadow-style: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
 }
 
-/* Dark Mode Override Support */
-.dark body {
-  background-color: #0f172a;
-  color: #f8fafc;
+.dark {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-card: #1e293b;
+  --border-color: #334155;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent-color: #6366f1;
+  --shadow-style: none;
+}
+
+@layer base {
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    overflow-x: hidden;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
 }
 
 /* Custom Scrollbar */
@@ -33,21 +50,23 @@
   background: #334155;
 }
 
-/* CRM Surface Card Styles */
-.crm-card {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+/* Clean Card Utility */
+.clean-surface {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-style);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.dark .crm-card {
-  background-color: #1e293b;
-  border-color: #334155;
-  box-shadow: none;
+.clean-surface:hover {
+  border-color: #cbd5e1;
+}
+.dark .clean-surface:hover {
+  border-color: #475569;
 }
 
-/* Animations */
+/* Slide-over & Fade Animations */
 @keyframes slideInRight {
   from { transform: translateX(100%); }
   to { transform: translateX(0); }
@@ -58,8 +77,8 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(2px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fadeIn {
