@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useLeadStore } from '@/lib/lead-store';
 import { DocumentStatus } from '@/lib/types';
 import { IconFileText, IconCheckCircle, IconAlertTriangle, IconDownload, IconXCircle } from '@/components/ui/Icons';
@@ -8,115 +8,139 @@ import { IconFileText, IconCheckCircle, IconAlertTriangle, IconDownload, IconXCi
 export const DocumentVault: React.FC = () => {
   const { allLeadsUnfiltered, addDocumentAttachment } = useLeadStore();
 
-  // Collect all documents across all leads
-  const docsWithLead = allLeadsUnfiltered.flatMap((lead) =>
-    lead.documents.map((doc) => ({ doc, lead }))
-  );
+  const leadsWithDocs = allLeadsUnfiltered.filter((l) => (l.documents || []).length > 0);
 
-  const handleToggleDocStatus = (leadId: string, docId: string, currentStatus: DocumentStatus) => {
-    const nextStatus: DocumentStatus = 
-      currentStatus === 'Pending' ? 'Approved' : currentStatus === 'Approved' ? 'Rejected' : 'Pending';
+  const [selectedLeadId, setSelectedLeadId] = useState<string>(leadsWithDocs[0]?.id || allLeadsUnfiltered[0]?.id || '');
+  const [docTitle, setDocTitle] = useState('');
+  const [docType, setDocType] = useState<'Dissertation' | 'ID Proof' | 'Marksheet'>('Marksheet');
 
-    alert(`Updated document verification status to "${nextStatus}". Audit log generated.`);
-  };
+  const selectedLead = allLeadsUnfiltered.find((l) => l.id === selectedLeadId) || allLeadsUnfiltered[0];
 
-  const getStatusBadge = (status: DocumentStatus) => {
-    switch (status) {
-      case 'Approved':
-        return 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40';
-      case 'Pending':
-        return 'bg-amber-500/20 text-amber-300 border-amber-500/40';
-      case 'Rejected':
-        return 'bg-rose-500/20 text-rose-300 border-rose-500/40';
-      case 'Missing':
-        return 'bg-slate-800 text-slate-400 border-slate-700';
-    }
+  const handleUpload = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!docTitle.trim() || !selectedLead) return;
+    addDocumentAttachment(selectedLead.id, {
+      title: docTitle,
+      type: docType,
+      fileName: `${docTitle.replace(/\s+/g, '_')}.pdf`,
+      fileSize: '2.8 MB',
+      status: 'Approved',
+    });
+    setDocTitle('');
+    alert('Document added to Vault!');
   };
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="space-y-6 pb-8 text-slate-900">
       
-      {/* Header */}
-      <div className="glass-panel p-6 rounded-3xl border border-slate-800 bg-gradient-to-r from-slate-900 via-blue-950 to-slate-950 flex items-center justify-between">
-        <div>
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-bold uppercase tracking-wider mb-2">
-            <IconFileText className="w-3.5 h-3.5" />
-            <span>Section 4: Admissions & Verification Vault</span>
+      {/* Header Banner */}
+      <div className="ls-card p-6 border-l-4 border-l-blue-600 bg-white flex items-center justify-between shadow-sm">
+        <div className="flex items-center space-x-4">
+          <div className="p-3.5 rounded-2xl bg-blue-100 text-blue-800">
+            <IconFileText className="w-7 h-7" />
           </div>
-          <h2 className="text-2xl font-black text-white">Student Document Vault & OCR Verification</h2>
-          <p className="text-xs text-slate-400 mt-1">Review dissertations, degree marksheets, national ID scans, and automated OCR validation alerts.</p>
+          <div>
+            <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-blue-100 text-blue-900 border border-blue-300">
+              Admissions Document & Fee Portal
+            </span>
+            <h1 className="text-2xl font-black text-slate-900 mt-1">Document Vault & Tuition Receipts</h1>
+            <p className="text-sm font-bold text-slate-600 mt-0.5">
+              Verified storage for Marksheets, Identification Proofs, Certificates, Dissertations, and Fee Receipts.
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Document Grid List */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {docsWithLead.length === 0 ? (
-          <div className="col-span-2 py-12 text-center text-slate-500 glass-panel rounded-2xl border border-slate-800 text-xs">
-            No documents uploaded in system vault.
-          </div>
-        ) : (
-          docsWithLead.map(({ doc, lead }) => (
-            <div
-              key={doc.id}
-              className="glass-panel p-5 rounded-3xl border border-slate-800 space-y-4 shadow-xl hover:border-slate-700 transition-all"
-            >
-              <div className="flex items-start justify-between">
-                <div>
-                  <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 uppercase border border-blue-500/30">
-                    {doc.type}
-                  </span>
-                  <h4 className="font-extrabold text-base text-white mt-2">{doc.title}</h4>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    Student: <strong className="text-white">{lead.name}</strong> • Course: <span className="text-blue-400 font-semibold">{lead.course}</span>
-                  </p>
-                </div>
-
-                <span className={`px-3 py-1 rounded-full text-xs font-extrabold uppercase border ${getStatusBadge(doc.status)}`}>
-                  {doc.status}
-                </span>
-              </div>
-
-              {doc.abstractText && (
-                <div className="p-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-slate-300 italic">
-                  <span className="font-bold text-slate-400 not-italic block mb-1">Thesis Abstract Preview:</span>
-                  "{doc.abstractText}"
-                </div>
-              )}
-
-              {doc.ocrAlerts && doc.ocrAlerts.length > 0 && (
-                <div className="p-3 rounded-2xl bg-indigo-950/30 border border-indigo-500/30 text-xs space-y-1">
-                  <div className="font-bold text-indigo-300 flex items-center space-x-1.5 text-[11px]">
-                    <IconAlertTriangle className="w-3.5 h-3.5 text-indigo-400" />
-                    <span>Automated OCR Field Validation Alert</span>
-                  </div>
-                  {doc.ocrAlerts.map((alert, i) => (
-                    <p key={i} className="text-slate-300 text-[11px]">{alert}</p>
-                  ))}
-                </div>
-              )}
-
-              <div className="flex items-center justify-between pt-2 border-t border-slate-800 text-xs">
-                <span className="font-mono text-slate-500 text-[11px]">{doc.fileName} ({doc.fileSize})</span>
-
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => handleToggleDocStatus(lead.id, doc.id, doc.status)}
-                    className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all"
-                  >
-                    Change Status
-                  </button>
-                  <button
-                    onClick={() => alert(`Downloading PDF file ${doc.fileName}...`)}
-                    className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl"
-                  >
-                    <IconDownload className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-
+      {/* Upload & Document View Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* Upload Form */}
+        <div className="ls-card p-6 bg-white space-y-4">
+          <h2 className="text-base font-black text-slate-900 border-b border-slate-300 pb-3">Upload Student Document</h2>
+          
+          <form onSubmit={handleUpload} className="space-y-4 text-sm font-bold">
+            <div>
+              <label className="block text-xs font-black text-slate-600 mb-1">Select Student</label>
+              <select
+                value={selectedLeadId}
+                onChange={(e) => setSelectedLeadId(e.target.value)}
+                className="w-full p-2.5 bg-slate-100 border border-slate-300 rounded-xl text-slate-900 font-bold focus:outline-none"
+              >
+                {allLeadsUnfiltered.map((l) => (
+                  <option key={l.id} value={l.id}>{l.name} ({l.course})</option>
+                ))}
+              </select>
             </div>
-          ))
-        )}
+
+            <div>
+              <label className="block text-xs font-black text-slate-600 mb-1">Document Title</label>
+              <input
+                type="text"
+                value={docTitle}
+                onChange={(e) => setDocTitle(e.target.value)}
+                placeholder="e.g. B.Tech Final Year Marksheet"
+                className="w-full p-2.5 bg-slate-100 border border-slate-300 rounded-xl text-slate-900 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-black text-slate-600 mb-1">Document Category</label>
+              <select
+                value={docType}
+                onChange={(e) => setDocType(e.target.value as any)}
+                className="w-full p-2.5 bg-slate-100 border border-slate-300 rounded-xl text-slate-900 font-bold focus:outline-none"
+              >
+                <option value="Marksheet">Marksheet</option>
+                <option value="ID Proof">ID Proof</option>
+                <option value="Dissertation">Dissertation</option>
+              </select>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl shadow-md transition-all"
+            >
+              Upload to Vault
+            </button>
+          </form>
+        </div>
+
+        {/* Vault Document View */}
+        <div className="lg:col-span-2 ls-card p-6 bg-white space-y-4">
+          <h2 className="text-base font-black text-slate-900 border-b border-slate-300 pb-3">
+            Attached Documents for {selectedLead?.name} ({selectedLead?.documents.length || 0})
+          </h2>
+
+          <div className="space-y-3">
+            {(!selectedLead?.documents || selectedLead.documents.length === 0) ? (
+              <div className="p-8 text-center text-slate-500 font-bold text-sm bg-slate-50 rounded-xl border border-slate-200">
+                No documents uploaded for this student.
+              </div>
+            ) : (
+              selectedLead.documents.map((doc) => (
+                <div key={doc.id} className="p-4 rounded-xl bg-slate-50 border border-slate-300 flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2.5 rounded-xl bg-blue-100 text-blue-900 font-bold">
+                      <IconFileText className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <div className="font-extrabold text-slate-900 text-sm">{doc.title}</div>
+                      <div className="text-xs text-slate-600 font-bold mt-0.5">
+                        {doc.fileName} • {doc.fileSize} • Status: <strong className="text-emerald-700">{doc.status}</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button className="p-2 text-blue-700 hover:bg-blue-100 rounded-lg transition-colors font-bold text-xs flex items-center space-x-1">
+                    <IconDownload className="w-4 h-4" />
+                    <span>Download</span>
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
       </div>
 
     </div>

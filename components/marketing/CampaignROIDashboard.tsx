@@ -1,153 +1,103 @@
 'use client';
 
-import React, { useState } from 'react';
-import { CAMPAIGN_ROI_DATA, AUTOMATION_RULES } from '@/lib/mock-data';
-import { IconTrendingUp, IconDollarSign, IconTag, IconSparkles, IconCheckCircle, IconSend } from '@/components/ui/Icons';
+import React from 'react';
+import { MOCK_CAMPAIGN_ROI, AUTOMATION_RULES } from '@/lib/mock-data';
+import { IconTrendingUp, IconDollarSign, IconSparkles, IconCheckCircle } from '@/components/ui/Icons';
 
 export const CampaignROIDashboard: React.FC = () => {
-  const [rules, setRules] = useState(AUTOMATION_RULES);
-
-  const toggleRule = (id: string) => {
-    setRules((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, enabled: !r.enabled } : r))
-    );
-  };
-
-  const totalSpend = CAMPAIGN_ROI_DATA.reduce((sum, c) => sum + c.spend, 0);
-  const totalLeads = CAMPAIGN_ROI_DATA.reduce((sum, c) => sum + c.leadsCount, 0);
-  const totalAdmissions = CAMPAIGN_ROI_DATA.reduce((sum, c) => sum + c.admissions, 0);
-  const avgCPL = Math.round(totalSpend / totalLeads);
-  const avgCAC = Math.round(totalSpend / totalAdmissions);
+  const totalSpend = MOCK_CAMPAIGN_ROI.reduce((sum, c) => sum + c.spend, 0);
+  const totalLeads = MOCK_CAMPAIGN_ROI.reduce((sum, c) => sum + c.leadsCount, 0);
+  const totalAdmissions = MOCK_CAMPAIGN_ROI.reduce((sum, c) => sum + c.admissions, 0);
+  const avgCpl = totalLeads > 0 ? Math.round(totalSpend / totalLeads) : 0;
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-6 pb-8 text-slate-900">
       
-      {/* Banner */}
-      <div className="glass-panel p-6 rounded-3xl border border-slate-800 bg-gradient-to-r from-slate-900 via-emerald-950 to-slate-950 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-2">
-            <IconTrendingUp className="w-3.5 h-3.5" />
-            <span>Section 3: Marketing Intelligence & ROI Hub</span>
+      {/* Header Banner */}
+      <div className="ls-card p-6 border-l-4 border-l-blue-600 bg-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
+        <div className="flex items-center space-x-4">
+          <div className="p-3.5 rounded-2xl bg-blue-100 text-blue-800">
+            <IconTrendingUp className="w-7 h-7" />
           </div>
-          <h2 className="text-2xl font-black text-white">Campaign Attribution & Spend ROI</h2>
-          <p className="text-xs text-slate-400 mt-1">Real-time CPL (Cost Per Lead), CAC (Customer Acquisition Cost), and channel conversion tracking.</p>
-        </div>
-
-        <div className="flex items-center space-x-4 bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
-          <div className="text-right">
-            <div className="text-xs text-slate-400">Total Spend</div>
-            <div className="text-xl font-black text-white">${totalSpend.toLocaleString()}</div>
-          </div>
-          <div className="h-8 w-[1px] bg-slate-800" />
-          <div className="text-right">
-            <div className="text-xs text-slate-400">Avg Cost / Lead (CPL)</div>
-            <div className="text-xl font-black text-emerald-400">${avgCPL}</div>
-          </div>
-          <div className="h-8 w-[1px] bg-slate-800" />
-          <div className="text-right">
-            <div className="text-xs text-slate-400">Acquisition Cost (CAC)</div>
-            <div className="text-xl font-black text-blue-400">${avgCAC}</div>
+          <div>
+            <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-blue-100 text-blue-900 border border-blue-300">
+              Channel Attribution & Marketing Spend Analytics
+            </span>
+            <h1 className="text-2xl font-black text-slate-900 mt-1">Campaign ROI & Lead Attribution</h1>
+            <p className="text-sm font-bold text-slate-600 mt-0.5">
+              Real-time CPL (Cost Per Lead), CAC (Customer Acquisition Cost), and ROI % by marketing origin.
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Campaign ROI Table */}
-      <div className="glass-panel p-6 rounded-3xl border border-slate-800 space-y-4">
-        <h3 className="font-extrabold text-base text-white flex items-center space-x-2 border-b border-slate-800 pb-3">
-          <IconDollarSign className="w-5 h-5 text-emerald-400" />
-          <span>Marketing Channel ROI & Attribution Performance</span>
-        </h3>
+      {/* Summary KPI Strip */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="ls-card p-5 bg-white">
+          <div className="text-xs font-black text-slate-500 uppercase">Total Campaign Spend</div>
+          <div className="text-3xl font-black text-slate-900 mt-1 font-mono">${totalSpend.toLocaleString()}</div>
+          <div className="text-xs font-bold text-slate-600 mt-1">Across 4 Active Campaigns</div>
+        </div>
+        <div className="ls-card p-5 bg-white">
+          <div className="text-xs font-black text-slate-500 uppercase">Total Leads Captured</div>
+          <div className="text-3xl font-black text-blue-700 mt-1 font-mono">{totalLeads}</div>
+          <div className="text-xs font-bold text-slate-600 mt-1">Multi-Channel Attribution</div>
+        </div>
+        <div className="ls-card p-5 bg-white">
+          <div className="text-xs font-black text-slate-500 uppercase">Average CPL (Cost/Lead)</div>
+          <div className="text-3xl font-black text-emerald-700 mt-1 font-mono">${avgCpl}</div>
+          <div className="text-xs font-bold text-slate-600 mt-1">Blended Cost Per Acquisition</div>
+        </div>
+        <div className="ls-card p-5 bg-white">
+          <div className="text-xs font-black text-slate-500 uppercase">Admissions Converted</div>
+          <div className="text-3xl font-black text-purple-700 mt-1 font-mono">{totalAdmissions}</div>
+          <div className="text-xs font-bold text-slate-600 mt-1">Enrolled Students</div>
+        </div>
+      </div>
+
+      {/* Campaign Attribution Table */}
+      <div className="ls-card overflow-hidden bg-white">
+        <div className="p-5 border-b border-slate-300 bg-slate-100 flex items-center justify-between">
+          <h2 className="text-base font-black text-slate-900 flex items-center space-x-2">
+            <IconDollarSign className="w-5 h-5 text-blue-600" />
+            <span>Campaign ROI Breakdown ({MOCK_CAMPAIGN_ROI.length})</span>
+          </h2>
+        </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-slate-300">
-            <thead className="bg-slate-900 text-slate-400 uppercase font-semibold border-b border-slate-800">
+          <table className="w-full text-left text-sm text-slate-900">
+            <thead className="bg-slate-200 text-xs font-black text-slate-900 uppercase tracking-wider border-b border-slate-300">
               <tr>
-                <th className="py-3 px-3">Ad Campaign / Channel</th>
-                <th className="py-3 px-3 text-center">Spend</th>
-                <th className="py-3 px-3 text-center">Leads</th>
-                <th className="py-3 px-3 text-center">Qualified</th>
-                <th className="py-3 px-3 text-center">Admissions</th>
-                <th className="py-3 px-3 text-center">CPL</th>
-                <th className="py-3 px-3 text-center">CAC</th>
-                <th className="py-3 px-3 text-right">Channel ROI %</th>
+                <th scope="col" className="py-4 px-5">Campaign Name</th>
+                <th scope="col" className="py-4 px-5">Source Channel</th>
+                <th scope="col" className="py-4 px-5">Ad Spend</th>
+                <th scope="col" className="py-4 px-5">Leads Count</th>
+                <th scope="col" className="py-4 px-5">Admissions</th>
+                <th scope="col" className="py-4 px-5">CPL (Cost/Lead)</th>
+                <th scope="col" className="py-4 px-5">CAC (Cost/Student)</th>
+                <th scope="col" className="py-4 px-5">ROI %</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 font-mono">
-              {CAMPAIGN_ROI_DATA.map((camp) => (
-                <tr key={camp.id} className="hover:bg-slate-900/50">
-                  <td className="py-3.5 px-3 font-sans font-extrabold text-white">{camp.campaignName}</td>
-                  <td className="py-3.5 px-3 text-center text-slate-300">${camp.spend}</td>
-                  <td className="py-3.5 px-3 text-center text-slate-200">{camp.leadsCount}</td>
-                  <td className="py-3.5 px-3 text-center text-slate-300">{camp.qualifiedLeads}</td>
-                  <td className="py-3.5 px-3 text-center text-emerald-400 font-bold">{camp.admissions}</td>
-                  <td className="py-3.5 px-3 text-center text-amber-400">${camp.cpl}</td>
-                  <td className="py-3.5 px-3 text-center text-blue-400">${camp.cac}</td>
-                  <td className="py-3.5 px-3 text-right font-black text-emerald-400">{camp.roiPercent}%</td>
+            <tbody className="divide-y divide-slate-200 bg-white">
+              {MOCK_CAMPAIGN_ROI.map((c) => (
+                <tr key={c.id} className="hover:bg-slate-50 transition-colors">
+                  <td className="py-4 px-5 font-black text-slate-900 text-sm">{c.campaignName}</td>
+                  <td className="py-4 px-5 font-bold text-blue-700 text-xs">{c.source}</td>
+                  <td className="py-4 px-5 font-mono font-bold text-slate-900">${c.spend.toLocaleString()}</td>
+                  <td className="py-4 px-5 font-bold text-slate-900">{c.leadsCount}</td>
+                  <td className="py-4 px-5 font-bold text-emerald-700">{c.admissions}</td>
+                  <td className="py-4 px-5 font-mono font-bold text-slate-900">${c.cpl}</td>
+                  <td className="py-4 px-5 font-mono font-bold text-slate-900">${c.cac}</td>
+                  <td className="py-4 px-5">
+                    <span className="px-3 py-1 rounded-lg text-xs font-black bg-emerald-100 text-emerald-900 border border-emerald-300">
+                      +{c.roiPercent}% ROI
+                    </span>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      </div>
-
-      {/* Grid: Rule-Based Automation & Drip Campaigns */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
-        {/* Left: Rule-Based Automation Engine */}
-        <div className="lg:col-span-6 glass-panel p-6 rounded-3xl border border-slate-800 space-y-4">
-          <h3 className="font-extrabold text-base text-white flex items-center space-x-2 border-b border-slate-800 pb-3">
-            <IconSparkles className="w-5 h-5 text-indigo-400" />
-            <span>Rule-Based Automation Engine</span>
-          </h3>
-
-          <div className="space-y-3 text-xs">
-            {rules.map((rule) => (
-              <div key={rule.id} className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between">
-                <div className="space-y-1">
-                  <div className="font-bold text-white text-xs">{rule.name}</div>
-                  <div className="text-[11px] text-slate-400">Trigger: <span className="text-blue-400">{rule.trigger}</span></div>
-                  <div className="text-[11px] text-slate-300">Action: {rule.action}</div>
-                </div>
-
-                <button
-                  onClick={() => toggleRule(rule.id)}
-                  className={`px-3 py-1.5 rounded-xl font-bold text-[10px] uppercase tracking-wider transition-all ${
-                    rule.enabled
-                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                      : 'bg-slate-800 text-slate-500 border border-slate-700'
-                  }`}
-                >
-                  {rule.enabled ? 'Enabled' : 'Disabled'}
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Right: Nurture Drip Sequences */}
-        <div className="lg:col-span-6 glass-panel p-6 rounded-3xl border border-slate-800 space-y-4">
-          <h3 className="font-extrabold text-base text-white flex items-center space-x-2 border-b border-slate-800 pb-3">
-            <IconSend className="w-5 h-5 text-purple-400" />
-            <span>Drip Nurture Campaign Sequences</span>
-          </h3>
-
-          <div className="space-y-3 text-xs">
-            {[
-              { day: 'Day 1', label: 'Instant Welcome Email & WhatsApp Syllabus PDF Link' },
-              { day: 'Day 7', label: 'Live Masterclass Demo Session Invitation' },
-              { day: 'Day 15', label: 'Student Placement & Alumni Salary Report' },
-              { day: 'Day 30', label: 'Early Bird Scholarship Discount Code ($200 Off)' }
-            ].map((drip) => (
-              <div key={drip.day} className="p-3 rounded-2xl bg-slate-950 border border-slate-800 flex items-center space-x-3">
-                <span className="px-2.5 py-1 rounded-xl bg-purple-500/20 text-purple-300 font-extrabold font-mono text-xs border border-purple-500/30 shrink-0">
-                  {drip.day}
-                </span>
-                <span className="text-slate-200 font-medium">{drip.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
       </div>
 
     </div>

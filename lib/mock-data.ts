@@ -1,4 +1,4 @@
-import { Lead, Counsellor, CampaignROI, AutomationRule, AuditLogEntry } from './types';
+import { Lead, Counsellor, CampaignROI, AutomationRule, AuditLogEntry, CallRecording } from './types';
 
 export const COURSES = [
   'Data Science & AI Master Bootcamp',
@@ -39,9 +39,9 @@ export const COUNSELLORS: Counsellor[] = [
   },
   {
     id: 'counsellor-2',
-    name: 'Alex Rivera',
-    email: 'alex.r@auraacademy.edu',
-    phone: '+1 (555) 876-5432',
+    name: 'Marcus Chen',
+    email: 'marcus.c@auraacademy.edu',
+    phone: '+1 (555) 345-6789',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
     role: 'Admissions Manager'
   },
@@ -49,17 +49,17 @@ export const COUNSELLORS: Counsellor[] = [
     id: 'counsellor-3',
     name: 'Priya Sharma',
     email: 'priya.s@auraacademy.edu',
-    phone: '+1 (555) 345-6789',
+    phone: '+1 (555) 456-7890',
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
     role: 'Academic Advisor'
   },
   {
     id: 'counsellor-4',
-    name: 'Marcus Chen',
-    email: 'marcus.c@auraacademy.edu',
-    phone: '+1 (555) 987-6543',
+    name: 'David Kim',
+    email: 'david.k@auraacademy.edu',
+    phone: '+1 (555) 567-8901',
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
-    role: 'Team Lead'
+    role: 'Senior Counsellor'
   }
 ];
 
@@ -67,19 +67,18 @@ export const INITIAL_LEADS: Lead[] = [
   {
     id: 'lead-101',
     name: 'Rohan Mehta',
-    phone: '+1 (555) 123-4567',
-    alternatePhone: '+1 (555) 123-9999',
-    email: 'rohan.mehta@gmail.com',
-    address: '742 Evergreen Terrace, Suite 4B',
+    phone: '+1 (555) 912-3456',
+    alternatePhone: '+1 (555) 912-9999',
+    email: 'rohan.mehta@example.com',
+    address: '450 Mission St, Suite 200',
     city: 'San Francisco',
-    center: 'Silicon Valley Campus',
-    batch: 'Fall 2026 Weekend Batch A',
+    center: 'Downtown Innovation Hub',
     course: 'Data Science & AI Master Bootcamp',
-    qualification: 'Undergraduate',
-    preferredBatch: 'Weekend (Sat-Sun)',
+    qualification: 'Postgraduate',
+    preferredBatch: 'Morning (9 AM - 12 PM)',
     graduationYear: '2024',
-    workExperience: '2 Years in QA Automation',
-    message: 'Looking for a hands-on AI course to transition from Software Testing to Machine Learning.',
+    workExperience: '2 Years in Analytics',
+    message: 'Looking for advanced AI project-based learning with placement assistance.',
     status: 'Interested',
     source: 'Google Ads',
     utmSource: 'google',
@@ -87,74 +86,61 @@ export const INITIAL_LEADS: Lead[] = [
     utmCampaign: 'google_cpc_ai_master',
     entryPoint: 'Enroll Form',
     assignedCounsellorId: 'counsellor-1',
-    dateAdded: '2026-08-14T10:15:00Z',
+    dateAdded: '2026-08-16T08:30:00Z',
     isDuplicate: false,
+    totalCourseFee: 3200,
     aiLeadScore: 92,
-    escalatedToManager: false,
-    totalCourseFee: 3500,
     ackSent: {
       email: true,
       sms: true,
       whatsapp: true,
-      timestamp: '2026-08-14T10:15:05Z'
+      timestamp: '2026-08-16T08:30:05Z'
     },
-    notes: 'Submitted enquiry via Google Ads landing page. Highly interested in dissertation project on NLP.',
+    notes: 'Very interested in AI & Deep Learning modules. Requested weekend demo class link.',
     activityHistory: [
       {
-        id: 'act-1',
+        id: 'act-101-1',
         type: 'Auto-Acknowledgement',
-        author: 'System Bot',
-        message: 'Sent automated Welcome SMS & Email with course brochure.',
-        timestamp: '2026-08-14T10:15:05Z'
+        author: 'System Auto-Ack API',
+        message: 'Automated Thank You Email, SMS & WhatsApp dispatched.',
+        timestamp: '2026-08-16T08:30:05Z'
       },
       {
-        id: 'act-2',
-        type: 'Counsellor Assigned',
-        author: 'System Auto-Assign',
-        message: 'Assigned lead to Sarah Jenkins based on course expertise.',
-        timestamp: '2026-08-14T10:16:00Z'
+        id: 'act-101-2',
+        type: 'Call Log',
+        author: 'Sarah Jenkins',
+        message: 'Outbound call connected. Discussed curriculum & placement assistance.',
+        timestamp: '2026-08-16T11:15:00Z'
       }
     ],
     documents: [
       {
         id: 'doc-1',
-        title: 'B.Sc Computer Science Thesis & Dissertation',
-        type: 'Dissertation',
-        fileName: 'Rohan_Mehta_ML_Dissertation_2024.pdf',
-        fileSize: '4.2 MB',
-        uploadDate: '2026-08-14T10:15:00Z',
-        abstractText: 'An Empirical Study of Transformer Architectures in Predictive Financial Sentiment Analysis using Natural Language Processing.',
-        status: 'Approved',
-        verifierNotes: 'Verified by Academic Dean'
-      },
-      {
-        id: 'doc-2',
-        title: 'National Identity Proof (Passport Scan)',
-        type: 'ID Proof',
-        fileName: 'Rohan_Mehta_Passport_Copy.pdf',
-        fileSize: '1.1 MB',
-        uploadDate: '2026-08-14T10:15:00Z',
-        status: 'Approved',
-        ocrAlerts: ['Match confirmed: Name & DOB match Application record']
+        title: 'B.Tech Degree Certificate & Marksheet',
+        type: 'Marksheet',
+        fileName: 'Rohan_Mehta_Degree.pdf',
+        fileSize: '2.4 MB',
+        uploadDate: '2026-08-16T09:00:00Z',
+        status: 'Approved'
       }
     ],
     payments: [
       {
         id: 'pay-1',
         amount: 500,
-        date: '2026-08-14T10:20:00Z',
+        date: '2026-08-16T12:00:00Z',
         paymentMethod: 'Credit Card',
         status: 'Paid',
         receiptNumber: 'REC-2026-901',
-        notes: 'Initial seat reservation token fee.'
+        notes: 'Seat reservation fee paid.'
       }
     ],
     scheduledCalls: [
       {
         id: 'call-1',
-        scheduledDate: '2026-08-16',
+        scheduledDate: '2026-08-18',
         scheduledTime: '11:00',
-        notes: 'Follow up regarding fee payment installment plan and syllabus review.',
+        notes: 'Discuss installment payment plan.',
         completed: false,
         assignedCounsellorId: 'counsellor-1'
       }
@@ -162,236 +148,88 @@ export const INITIAL_LEADS: Lead[] = [
     callRecordings: [
       {
         id: 'rec-101',
-        url: 'https://actions.google.com/sounds/v1/ambiences/office_space.ogg',
-        durationSeconds: 245,
-        timestamp: '2026-08-15T11:20:00Z',
+        url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+        durationSeconds: 185,
+        timestamp: '2026-08-16T11:15:00Z',
         direction: 'Outbound',
         counsellorName: 'Sarah Jenkins',
         disposition: 'Interested',
-        transcriptionText: 'Sarah: Hello Rohan! Calling from Aura Academy. I reviewed your B.Sc thesis on Transformer models. Rohan: Hi Sarah, yes! I want to confirm if the Machine Learning bootcamp includes PyTorch deep learning modules. Sarah: Absolutely, module 3 focuses on PyTorch and Model Deployment.',
-        aiSummary: 'Student inquired about PyTorch curriculum alignment with his B.Sc thesis background. Counsellor explained Module 3 deep learning syllabus.',
-        aiObjections: ['Wants 2-month monthly installment plan option'],
-        aiNextBestAction: 'Send customized fee installment agreement link via WhatsApp and follow up on Aug 16.',
-        aiCallScore: 88,
-        scoreBreakdown: {
-          greeting: 18,
-          discovery: 19,
-          explanation: 19,
-          objectionHandling: 16,
-          closing: 16
-        }
+        transcriptionText: 'Hi Rohan! Following up on your Data Science & AI Master Bootcamp application. We discussed batch timing and placement support.',
+        aiSummary: 'Student interested in Morning Batch. Requested fee installment plan.',
+        aiObjections: ['Fee structure', 'Weekend vs Morning timing'],
+        aiNextBestAction: 'Send WhatsApp fee receipt link & schedule follow-up call.',
+        aiCallScore: 92,
+        scoreBreakdown: { greeting: 18, discovery: 19, explanation: 19, objectionHandling: 18, closing: 18 }
       }
     ]
   },
   {
     id: 'lead-102',
     name: 'Emily Watson',
-    phone: '+1 (555) 987-1122',
-    alternatePhone: '+1 (555) 987-0000',
-    email: 'emily.watson@techhub.io',
-    address: '1200 5th Avenue',
-    city: 'Seattle',
-    center: 'Downtown Innovation Hub',
-    batch: 'Fall 2026 Evening Batch B',
+    phone: '+1 (555) 823-4567',
+    alternatePhone: '',
+    email: 'emily.w@example.com',
+    address: '120 Market St',
+    city: 'New York',
+    center: 'Manhattan Tech Center',
     course: 'Full Stack Web Development (MERN)',
-    qualification: 'Working Professional',
+    qualification: 'Undergraduate',
     preferredBatch: 'Evening (6 PM - 9 PM)',
-    graduationYear: '2022',
-    workExperience: '3 Years as UI Designer',
-    message: 'Interested in the evening batch schedule and scholarship options.',
-    status: 'Contacted',
+    graduationYear: '2025',
+    workExperience: 'None',
+    message: 'Interested in evening batch for web dev bootcamp.',
+    status: 'New',
     source: 'Instagram',
     utmSource: 'instagram',
     utmMedium: 'social_story',
     utmCampaign: 'insta_story_promo',
-    entryPoint: 'Brochure Download',
+    entryPoint: 'Callback Modal',
     assignedCounsellorId: 'counsellor-2',
-    dateAdded: '2026-08-13T14:30:00Z',
+    dateAdded: '2026-08-16T09:15:00Z',
     isDuplicate: false,
-    aiLeadScore: 78,
-    escalatedToManager: false,
     totalCourseFee: 2800,
-    ackSent: {
-      email: true,
-      sms: true,
-      whatsapp: false,
-      timestamp: '2026-08-13T14:30:10Z'
-    },
-    notes: 'Spoke over phone. Wants details about income share agreement or monthly installment plan.',
-    activityHistory: [
-      {
-        id: 'act-3',
-        type: 'Call Log',
-        author: 'Alex Rivera',
-        message: 'Brief 8 min intro call. Sent fee structure via email.',
-        timestamp: '2026-08-13T16:00:00Z'
-      }
-    ],
-    documents: [
-      {
-        id: 'doc-3',
-        title: 'Undergraduate Marksheet Transcript',
-        type: 'Marksheet',
-        fileName: 'Emily_Watson_BDes_Transcript.pdf',
-        fileSize: '2.4 MB',
-        uploadDate: '2026-08-13T14:30:00Z',
-        status: 'Pending',
-        ocrAlerts: ['Awaiting manual verification of final semester GPA']
-      }
-    ],
-    payments: [],
-    scheduledCalls: [
-      {
-        id: 'call-overdue-1',
-        scheduledDate: '2026-08-14',
-        scheduledTime: '09:30',
-        notes: 'Overdue call: Confirm scholarship approval status',
-        completed: false,
-        assignedCounsellorId: 'counsellor-2',
-        isOverdue: true
-      }
-    ],
-    callRecordings: [
-      {
-        id: 'rec-102',
-        url: 'https://actions.google.com/sounds/v1/ambiences/office_space.ogg',
-        durationSeconds: 180,
-        timestamp: '2026-08-13T16:00:00Z',
-        direction: 'Outbound',
-        counsellorName: 'Alex Rivera',
-        disposition: 'Follow-up',
-        transcriptionText: 'Alex: Hello Emily, following up on your MERN Stack inquiry. Emily: I am comparing Aura Academy with General Assembly. What is your job guarantee policy?',
-        aiSummary: 'Competitor comparison with General Assembly. Student requested job guarantee details.',
-        aiObjections: ['Competitor GA offering 10% lower upfront fee'],
-        aiNextBestAction: 'Share alumni hiring report (Google, Amazon placements) & offer $200 early bird scholarship discount.',
-        aiCallScore: 82,
-        scoreBreakdown: {
-          greeting: 17,
-          discovery: 17,
-          explanation: 18,
-          objectionHandling: 15,
-          closing: 15
-        }
-      }
-    ]
-  },
-  {
-    id: 'lead-103',
-    name: 'David Kim',
-    phone: '+1 (555) 456-7890',
-    email: 'david.kim@designco.com',
-    city: 'Austin',
-    center: 'Austin Innovation Park',
-    batch: 'Fall 2026 Morning Batch A',
-    course: 'UI/UX Product Design Specialist',
-    qualification: 'Undergraduate',
-    preferredBatch: 'Morning (9 AM - 12 PM)',
-    graduationYear: '2025',
-    workExperience: 'Student Intern',
-    message: 'Need brochure for UI/UX product design certificate.',
-    status: 'Counselling',
-    source: 'Brochure Gate',
-    entryPoint: 'Brochure Download',
-    assignedCounsellorId: 'counsellor-3',
-    dateAdded: '2026-08-12T09:00:00Z',
-    isDuplicate: false,
     aiLeadScore: 85,
-    escalatedToManager: true,
-    totalCourseFee: 2400,
     ackSent: {
       email: true,
       sms: true,
       whatsapp: true,
-      timestamp: '2026-08-12T09:00:05Z'
+      timestamp: '2026-08-16T09:15:04Z'
     },
-    notes: 'Scheduled follow-up call after demo class session.',
+    notes: 'New enquiry from Instagram Story Ad.',
     activityHistory: [
       {
-        id: 'act-4',
-        type: 'Manager Escalation',
-        author: 'System Manager Escalation',
-        message: 'Lead escalated to Team Leader Marcus Chen: High intent lead stalled in Counselling >48h.',
-        timestamp: '2026-08-15T09:00:00Z'
+        id: 'act-102-1',
+        type: 'Auto-Acknowledgement',
+        author: 'System Auto-Ack API',
+        message: 'Automated Thank You Email, SMS & WhatsApp dispatched.',
+        timestamp: '2026-08-16T09:15:04Z'
       }
     ],
-    documents: [
-      {
-        id: 'doc-4',
-        title: 'Design Portfolio Dissertation & Case Studies',
-        type: 'Dissertation',
-        fileName: 'David_Kim_UIUX_CaseStudy_Dissertation.pdf',
-        fileSize: '8.5 MB',
-        uploadDate: '2026-08-12T09:00:00Z',
-        abstractText: 'Evaluating Micro-Interactions in Mobile Healthcare Interfaces for Elderly Users.',
-        status: 'Approved'
-      }
-    ],
+    documents: [],
     payments: [],
     scheduledCalls: [],
     callRecordings: []
   },
   {
-    id: 'lead-105',
-    name: 'Carlos Gomez',
-    phone: '+1 (555) 321-7654',
-    email: 'carlos.gomez@gmail.com',
-    city: 'New York',
-    center: 'Manhattan Tech Center',
-    batch: 'Fall 2026 Evening Batch A',
-    course: 'Cloud Computing & DevOps Engineering',
+    id: 'lead-103',
+    name: 'Sophia Martinez',
+    phone: '+1 (555) 734-5678',
+    email: 'sophia.m@example.com',
+    city: 'Austin',
+    course: 'UI/UX Product Design Specialist',
     qualification: 'Working Professional',
-    preferredBatch: 'Evening (6 PM - 9 PM)',
-    graduationYear: '2021',
-    workExperience: 'DevOps Engineer',
-    message: 'Enrolled in full program with batch starting next week.',
-    status: 'Enrolled',
+    preferredBatch: 'Weekend (Sat-Sun)',
+    status: 'Contacted',
     source: 'Referral',
     entryPoint: 'Enroll Form',
-    assignedCounsellorId: 'counsellor-1',
-    dateAdded: '2026-08-09T08:20:00Z',
+    assignedCounsellorId: 'counsellor-3',
+    dateAdded: '2026-08-15T14:10:00Z',
     isDuplicate: false,
-    enrolledStudentId: 'STU-2026-049',
-    aiLeadScore: 100,
-    totalCourseFee: 3800,
-    ackSent: {
-      email: true,
-      sms: true,
-      whatsapp: true,
-      timestamp: '2026-08-09T08:20:05Z'
-    },
-    notes: 'ENROLLED & CONFIRMED. Tuition fee paid in full. Student ID generated.',
-    activityHistory: [
-      {
-        id: 'act-6',
-        type: 'Status Change',
-        author: 'Sarah Jenkins',
-        message: 'Marked as Enrolled! Student converted successfully.',
-        timestamp: '2026-08-10T14:00:00Z'
-      }
-    ],
-    documents: [
-      {
-        id: 'doc-5',
-        title: 'Cloud Security Research Dissertation',
-        type: 'Dissertation',
-        fileName: 'Carlos_Gomez_DevOps_Cloud_Thesis.pdf',
-        fileSize: '5.1 MB',
-        uploadDate: '2026-08-09T08:20:00Z',
-        abstractText: 'Automating Zero-Trust Infrastructure Pipelines with Kubernetes and Terraform.',
-        status: 'Approved'
-      }
-    ],
-    payments: [
-      {
-        id: 'pay-3',
-        amount: 3800,
-        date: '2026-08-10T13:50:00Z',
-        paymentMethod: 'Credit Card',
-        status: 'Paid',
-        receiptNumber: 'REC-2026-770',
-        notes: 'Full tuition fee paid in one shot.'
-      }
-    ],
+    totalCourseFee: 2500,
+    aiLeadScore: 88,
+    activityHistory: [],
+    documents: [],
+    payments: [],
     scheduledCalls: [],
     callRecordings: []
   }
@@ -407,8 +245,8 @@ export const CAMPAIGN_ROI_DATA: CampaignROI[] = [
     qualifiedLeads: 48,
     applications: 22,
     admissions: 12,
-    cpl: 42, // Cost Per Lead
-    cac: 350, // Customer Acquisition Cost
+    cpl: 42,
+    cac: 350,
     roiPercent: 340
   },
   {
@@ -423,34 +261,10 @@ export const CAMPAIGN_ROI_DATA: CampaignROI[] = [
     cpl: 32.9,
     cac: 350,
     roiPercent: 280
-  },
-  {
-    id: 'camp-3',
-    campaignName: 'Campus Open House & Walk-ins',
-    source: 'Walk-in',
-    spend: 1200,
-    leadsCount: 30,
-    qualifiedLeads: 25,
-    applications: 18,
-    admissions: 14,
-    cpl: 40,
-    cac: 85.7,
-    roiPercent: 620
-  },
-  {
-    id: 'camp-4',
-    campaignName: 'Alumni Referral Reward Incentive Program',
-    source: 'Referral',
-    spend: 1500,
-    leadsCount: 25,
-    qualifiedLeads: 22,
-    applications: 19,
-    admissions: 16,
-    cpl: 60,
-    cac: 93.7,
-    roiPercent: 780
   }
 ];
+
+export const MOCK_CAMPAIGN_ROI = CAMPAIGN_ROI_DATA;
 
 export const AUTOMATION_RULES: AutomationRule[] = [
   {
@@ -458,20 +272,6 @@ export const AUTOMATION_RULES: AutomationRule[] = [
     name: 'Auto-Assign High Intent AI Leads to Senior Telecaller',
     trigger: 'Lead Source = Google Ads AND Course = Data Science & AI',
     action: 'Assign to Sarah Jenkins & Send Instant WhatsApp Brochure',
-    enabled: true
-  },
-  {
-    id: 'rule-2',
-    name: 'Escalate Stalled Leads to Team Manager (>48 Hours)',
-    trigger: 'Status = Counselling AND Uncontacted > 48 Hours',
-    action: 'Flag Escalation Queue Alert for Marcus Chen',
-    enabled: true
-  },
-  {
-    id: 'rule-3',
-    name: 'Auto-Dispatch Welcome SMS & Email Ack',
-    trigger: 'New Form Submission',
-    action: 'Send Welcome Email + SMS confirmation code',
     enabled: true
   }
 ];
@@ -500,17 +300,25 @@ export const AUDIT_TRAIL_LOGS: AuditLogEntry[] = [
     fieldChanged: 'Status Stage',
     oldValue: 'New',
     newValue: 'Interested'
-  },
+  }
+];
+
+export const MOCK_AUDIT_TRAIL = AUDIT_TRAIL_LOGS;
+
+export const MOCK_CALL_RECORDINGS: CallRecording[] = [
   {
-    id: 'audit-3',
-    timestamp: '2026-08-14T16:45:00Z',
-    user: 'Finance Admin',
-    role: 'Finance',
-    action: 'Document Verification',
-    targetLeadId: 'lead-101',
-    leadName: 'Rohan Mehta',
-    fieldChanged: 'Dissertation Verification',
-    oldValue: 'Pending',
-    newValue: 'Approved'
+    id: 'rec-101',
+    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+    durationSeconds: 185,
+    timestamp: '2026-08-16T11:15:00Z',
+    direction: 'Outbound',
+    counsellorName: 'Sarah Jenkins',
+    disposition: 'Interested',
+    transcriptionText: 'Hi Rohan! Following up on your Data Science & AI Master Bootcamp application. We discussed batch timing and placement support.',
+    aiSummary: 'Student interested in Morning Batch. Requested fee installment plan.',
+    aiObjections: ['Fee structure', 'Weekend vs Morning timing'],
+    aiNextBestAction: 'Send WhatsApp fee receipt link & schedule follow-up call.',
+    aiCallScore: 92,
+    scoreBreakdown: { greeting: 18, discovery: 19, explanation: 19, objectionHandling: 18, closing: 18 }
   }
 ];
