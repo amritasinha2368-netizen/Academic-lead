@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react';
 import { useLeadStore } from '@/lib/lead-store';
-import { DocumentStatus } from '@/lib/types';
-import { IconFileText, IconCheckCircle, IconAlertTriangle, IconDownload, IconXCircle } from '@/components/ui/Icons';
+import { IconFileText, IconDownload } from '@/components/ui/Icons';
 
 export const DocumentVault: React.FC = () => {
   const { allLeadsUnfiltered, addDocumentAttachment } = useLeadStore();
@@ -12,7 +11,7 @@ export const DocumentVault: React.FC = () => {
 
   const [selectedLeadId, setSelectedLeadId] = useState<string>(leadsWithDocs[0]?.id || allLeadsUnfiltered[0]?.id || '');
   const [docTitle, setDocTitle] = useState('');
-  const [docType, setDocType] = useState<'Dissertation' | 'ID Proof' | 'Marksheet'>('Marksheet');
+  const [docType, setDocType] = useState<'12th Marksheet' | 'ID Proof' | 'Transfer Certificate' | 'Admit Card'>('12th Marksheet');
 
   const selectedLead = allLeadsUnfiltered.find((l) => l.id === selectedLeadId) || allLeadsUnfiltered[0];
 
@@ -27,7 +26,7 @@ export const DocumentVault: React.FC = () => {
       status: 'Approved',
     });
     setDocTitle('');
-    alert('Document added to Vault!');
+    alert('12th Grade Student Document added to Vault!');
   };
 
   return (
@@ -41,11 +40,11 @@ export const DocumentVault: React.FC = () => {
           </div>
           <div>
             <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-blue-100 text-blue-900 border border-blue-300">
-              Admissions Document & Fee Portal
+              12th Pass Admissions Document Vault
             </span>
-            <h1 className="text-2xl font-black text-slate-900 mt-1">Document Vault & Tuition Receipts</h1>
+            <h1 className="text-2xl font-black text-slate-900 mt-1">Class 12th Document Verification Vault</h1>
             <p className="text-sm font-bold text-slate-600 mt-0.5">
-              Verified storage for Marksheets, Identification Proofs, Certificates, Dissertations, and Fee Receipts.
+              Verified storage for 12th Board Marksheets, School Transfer Certificates, Admit Cards, and Tuition Receipts.
             </p>
           </div>
         </div>
@@ -56,18 +55,18 @@ export const DocumentVault: React.FC = () => {
         
         {/* Upload Form */}
         <div className="ls-card p-6 bg-white space-y-4">
-          <h2 className="text-base font-black text-slate-900 border-b border-slate-300 pb-3">Upload Student Document</h2>
+          <h2 className="text-base font-black text-slate-900 border-b border-slate-300 pb-3">Upload 12th Student Document</h2>
           
           <form onSubmit={handleUpload} className="space-y-4 text-sm font-bold">
             <div>
-              <label className="block text-xs font-black text-slate-600 mb-1">Select Student</label>
+              <label className="block text-xs font-black text-slate-600 mb-1">Select 12th Applicant</label>
               <select
                 value={selectedLeadId}
                 onChange={(e) => setSelectedLeadId(e.target.value)}
                 className="w-full p-2.5 bg-slate-100 border border-slate-300 rounded-xl text-slate-900 font-bold focus:outline-none"
               >
                 {allLeadsUnfiltered.map((l) => (
-                  <option key={l.id} value={l.id}>{l.name} ({l.course})</option>
+                  <option key={l.id} value={l.id}>{l.name} ({l.qualification})</option>
                 ))}
               </select>
             </div>
@@ -78,7 +77,7 @@ export const DocumentVault: React.FC = () => {
                 type="text"
                 value={docTitle}
                 onChange={(e) => setDocTitle(e.target.value)}
-                placeholder="e.g. B.Tech Final Year Marksheet"
+                placeholder="e.g. 12th Board Physics & Math Marksheet"
                 className="w-full p-2.5 bg-slate-100 border border-slate-300 rounded-xl text-slate-900 focus:outline-none"
               />
             </div>
@@ -90,9 +89,10 @@ export const DocumentVault: React.FC = () => {
                 onChange={(e) => setDocType(e.target.value as any)}
                 className="w-full p-2.5 bg-slate-100 border border-slate-300 rounded-xl text-slate-900 font-bold focus:outline-none"
               >
-                <option value="Marksheet">Marksheet</option>
+                <option value="12th Marksheet">12th Marksheet</option>
                 <option value="ID Proof">ID Proof</option>
-                <option value="Dissertation">Dissertation</option>
+                <option value="Transfer Certificate">Transfer Certificate</option>
+                <option value="Admit Card">Admit Card</option>
               </select>
             </div>
 
@@ -100,7 +100,7 @@ export const DocumentVault: React.FC = () => {
               type="submit"
               className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl shadow-md transition-all"
             >
-              Upload to Vault
+              Upload to 12th Vault
             </button>
           </form>
         </div>
@@ -108,7 +108,7 @@ export const DocumentVault: React.FC = () => {
         {/* Vault Document View */}
         <div className="lg:col-span-2 ls-card p-6 bg-white space-y-4">
           <h2 className="text-base font-black text-slate-900 border-b border-slate-300 pb-3">
-            Attached Documents for {selectedLead?.name} ({selectedLead?.documents.length || 0})
+            Attached Documents for {selectedLead?.name} ({selectedLead?.documents?.length || 0})
           </h2>
 
           <div className="space-y-3">

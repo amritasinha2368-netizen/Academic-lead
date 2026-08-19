@@ -1,12 +1,14 @@
 import { Lead, Counsellor, CampaignROI, AutomationRule, AuditLogEntry, CallRecording } from './types';
 
 export const COURSES = [
-  'Data Science & AI Master Bootcamp',
-  'Full Stack Web Development (MERN)',
-  'UI/UX Product Design Specialist',
-  'Cybersecurity & Ethical Hacking',
-  'Digital Marketing & Growth Lead',
-  'Cloud Computing & DevOps Engineering'
+  'B.Tech Computer Science & AI',
+  'B.Tech Information Technology & Robotics',
+  'BBA (Bachelor of Business Administration)',
+  'B.Sc Computer Science & Data Analytics',
+  'BCA (Bachelor of Computer Applications)',
+  'B.Com (Hons) International Finance',
+  'BA (Hons) Journalism & Digital Media',
+  'B.Des (Bachelor of Product & UI/UX Design)'
 ];
 
 export const CITIES = [
@@ -21,11 +23,11 @@ export const CITIES = [
 ];
 
 export const CENTERS = [
-  'Downtown Innovation Hub',
-  'Silicon Valley Campus',
-  'Manhattan Tech Center',
-  'Austin Innovation Park',
-  'Online Virtual Campus'
+  'Downtown Campus',
+  'Innovation Engineering Block',
+  'Manhattan College Campus',
+  'Austin Science Wing',
+  'Online Virtual Classroom'
 ];
 
 export const COUNSELLORS: Counsellor[] = [
@@ -35,7 +37,7 @@ export const COUNSELLORS: Counsellor[] = [
     email: 'sarah.j@auraacademy.edu',
     phone: '+1 (555) 234-5678',
     avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80',
-    role: 'Senior Counsellor'
+    role: 'College Admissions Officer'
   },
   {
     id: 'counsellor-2',
@@ -43,7 +45,7 @@ export const COUNSELLORS: Counsellor[] = [
     email: 'marcus.c@auraacademy.edu',
     phone: '+1 (555) 345-6789',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-    role: 'Admissions Manager'
+    role: 'Head of Undergrad Admissions'
   },
   {
     id: 'counsellor-3',
@@ -51,7 +53,7 @@ export const COUNSELLORS: Counsellor[] = [
     email: 'priya.s@auraacademy.edu',
     phone: '+1 (555) 456-7890',
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
-    role: 'Academic Advisor'
+    role: '12th Pass Academic Advisor'
   },
   {
     id: 'counsellor-4',
@@ -59,7 +61,7 @@ export const COUNSELLORS: Counsellor[] = [
     email: 'david.k@auraacademy.edu',
     phone: '+1 (555) 567-8901',
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
-    role: 'Senior Counsellor'
+    role: 'Undergrad Admissions Counsellor'
   }
 ];
 
@@ -72,54 +74,55 @@ export const INITIAL_LEADS: Lead[] = [
     email: 'rohan.mehta@example.com',
     address: '450 Mission St, Suite 200',
     city: 'San Francisco',
-    center: 'Downtown Innovation Hub',
-    course: 'Data Science & AI Master Bootcamp',
-    qualification: 'Postgraduate',
-    preferredBatch: 'Morning (9 AM - 12 PM)',
-    graduationYear: '2024',
-    workExperience: '2 Years in Analytics',
-    message: 'Looking for advanced AI project-based learning with placement assistance.',
+    center: 'Downtown Campus',
+    course: 'B.Tech Computer Science & AI',
+    qualification: '12th Science (PCM)',
+    class12Percentage: 88.5,
+    preferredBatch: 'Regular Morning College Batch',
+    graduationYear: '2026 12th Pass',
+    workExperience: 'Fresh 12th Graduate',
+    message: 'Just passed 12th Science (PCM) with 88.5% marks. Looking for B.Tech CSE Admission 2026.',
     status: 'Interested',
     source: 'Google Ads',
     utmSource: 'google',
     utmMedium: 'cpc',
-    utmCampaign: 'google_cpc_ai_master',
-    entryPoint: 'Enroll Form',
+    utmCampaign: 'btech_cs_admissions_2026',
+    entryPoint: 'College Application Form',
     assignedCounsellorId: 'counsellor-1',
     dateAdded: '2026-08-16T08:30:00Z',
     isDuplicate: false,
-    totalCourseFee: 3200,
-    aiLeadScore: 92,
+    totalCourseFee: 4800,
+    aiLeadScore: 94,
     ackSent: {
       email: true,
       sms: true,
       whatsapp: true,
       timestamp: '2026-08-16T08:30:05Z'
     },
-    notes: 'Very interested in AI & Deep Learning modules. Requested weekend demo class link.',
+    notes: 'Completed 12th Grade PCM with distinction. Inquiring about scholarship seats and hostel facilities.',
     activityHistory: [
       {
         id: 'act-101-1',
         type: 'Auto-Acknowledgement',
-        author: 'System Auto-Ack API',
-        message: 'Automated Thank You Email, SMS & WhatsApp dispatched.',
+        author: 'Admissions System API',
+        message: 'Automated 12th Admission Brochure, Prospectus & Welcome Code sent via Email, SMS & WhatsApp.',
         timestamp: '2026-08-16T08:30:05Z'
       },
       {
         id: 'act-101-2',
         type: 'Call Log',
         author: 'Sarah Jenkins',
-        message: 'Outbound call connected. Discussed curriculum & placement assistance.',
+        message: 'Connected call with Rohan and his parents. Discussed 12th marks eligibility and B.Tech CSE labs.',
         timestamp: '2026-08-16T11:15:00Z'
       }
     ],
     documents: [
       {
         id: 'doc-1',
-        title: 'B.Tech Degree Certificate & Marksheet',
-        type: 'Marksheet',
-        fileName: 'Rohan_Mehta_Degree.pdf',
-        fileSize: '2.4 MB',
+        title: 'Class 12th Board Marksheet & Certificate',
+        type: '12th Marksheet',
+        fileName: 'Rohan_12th_PCM_Marksheet.pdf',
+        fileSize: '1.8 MB',
         uploadDate: '2026-08-16T09:00:00Z',
         status: 'Approved'
       }
@@ -127,12 +130,12 @@ export const INITIAL_LEADS: Lead[] = [
     payments: [
       {
         id: 'pay-1',
-        amount: 500,
+        amount: 600,
         date: '2026-08-16T12:00:00Z',
         paymentMethod: 'Credit Card',
         status: 'Paid',
         receiptNumber: 'REC-2026-901',
-        notes: 'Seat reservation fee paid.'
+        notes: '12th Admission Seat Lock Booking Fee Paid.'
       }
     ],
     scheduledCalls: [
@@ -140,7 +143,7 @@ export const INITIAL_LEADS: Lead[] = [
         id: 'call-1',
         scheduledDate: '2026-08-18',
         scheduledTime: '11:00',
-        notes: 'Discuss installment payment plan.',
+        notes: 'Campus visit appointment with student and parents.',
         completed: false,
         assignedCounsellorId: 'counsellor-1'
       }
@@ -154,12 +157,12 @@ export const INITIAL_LEADS: Lead[] = [
         direction: 'Outbound',
         counsellorName: 'Sarah Jenkins',
         disposition: 'Interested',
-        transcriptionText: 'Hi Rohan! Following up on your Data Science & AI Master Bootcamp application. We discussed batch timing and placement support.',
-        aiSummary: 'Student interested in Morning Batch. Requested fee installment plan.',
-        aiObjections: ['Fee structure', 'Weekend vs Morning timing'],
-        aiNextBestAction: 'Send WhatsApp fee receipt link & schedule follow-up call.',
-        aiCallScore: 92,
-        scoreBreakdown: { greeting: 18, discovery: 19, explanation: 19, objectionHandling: 18, closing: 18 }
+        transcriptionText: 'Hello Rohan! Congratulations on passing 12th PCM with 88.5%. We discussed B.Tech CSE seat allocation and campus tour dates.',
+        aiSummary: 'Student passed 12th PCM. Applying for B.Tech Computer Science & AI 4-Year Degree.',
+        aiObjections: ['Hostel availability', 'Merit scholarship threshold'],
+        aiNextBestAction: 'Send campus prospectus and schedule parent counseling session.',
+        aiCallScore: 95,
+        scoreBreakdown: { greeting: 19, discovery: 19, explanation: 19, objectionHandling: 19, closing: 19 }
       }
     ]
   },
@@ -171,37 +174,38 @@ export const INITIAL_LEADS: Lead[] = [
     email: 'emily.w@example.com',
     address: '120 Market St',
     city: 'New York',
-    center: 'Manhattan Tech Center',
-    course: 'Full Stack Web Development (MERN)',
-    qualification: 'Undergraduate',
-    preferredBatch: 'Evening (6 PM - 9 PM)',
-    graduationYear: '2025',
-    workExperience: 'None',
-    message: 'Interested in evening batch for web dev bootcamp.',
+    center: 'Manhattan College Campus',
+    course: 'BBA (Bachelor of Business Administration)',
+    qualification: '12th Commerce',
+    class12Percentage: 91.2,
+    preferredBatch: 'Day Honors College Batch',
+    graduationYear: '2026 12th Pass',
+    workExperience: 'Fresh 12th Graduate',
+    message: 'Passed 12th Commerce with 91.2%. Searching for 3-Year BBA Honors College Admission.',
     status: 'New',
     source: 'Instagram',
     utmSource: 'instagram',
     utmMedium: 'social_story',
-    utmCampaign: 'insta_story_promo',
+    utmCampaign: 'undergrad_bba_2026',
     entryPoint: 'Callback Modal',
     assignedCounsellorId: 'counsellor-2',
     dateAdded: '2026-08-16T09:15:00Z',
     isDuplicate: false,
-    totalCourseFee: 2800,
-    aiLeadScore: 85,
+    totalCourseFee: 4200,
+    aiLeadScore: 89,
     ackSent: {
       email: true,
       sms: true,
       whatsapp: true,
       timestamp: '2026-08-16T09:15:04Z'
     },
-    notes: 'New enquiry from Instagram Story Ad.',
+    notes: 'Inquiring about 12th Commerce cutoff marks and international student exchange program.',
     activityHistory: [
       {
         id: 'act-102-1',
         type: 'Auto-Acknowledgement',
-        author: 'System Auto-Ack API',
-        message: 'Automated Thank You Email, SMS & WhatsApp dispatched.',
+        author: 'Admissions System API',
+        message: 'Automated 12th Commerce BBA Admission Prospectus sent.',
         timestamp: '2026-08-16T09:15:04Z'
       }
     ],
@@ -216,17 +220,18 @@ export const INITIAL_LEADS: Lead[] = [
     phone: '+1 (555) 734-5678',
     email: 'sophia.m@example.com',
     city: 'Austin',
-    course: 'UI/UX Product Design Specialist',
-    qualification: 'Working Professional',
-    preferredBatch: 'Weekend (Sat-Sun)',
+    course: 'B.Des (Bachelor of Product & UI/UX Design)',
+    qualification: '12th Arts / Humanities',
+    class12Percentage: 86.0,
+    preferredBatch: 'Regular Morning College Batch',
     status: 'Contacted',
     source: 'Referral',
-    entryPoint: 'Enroll Form',
+    entryPoint: 'Application Form',
     assignedCounsellorId: 'counsellor-3',
     dateAdded: '2026-08-15T14:10:00Z',
     isDuplicate: false,
-    totalCourseFee: 2500,
-    aiLeadScore: 88,
+    totalCourseFee: 3900,
+    aiLeadScore: 90,
     activityHistory: [],
     documents: [],
     payments: [],
@@ -238,29 +243,29 @@ export const INITIAL_LEADS: Lead[] = [
 export const CAMPAIGN_ROI_DATA: CampaignROI[] = [
   {
     id: 'camp-1',
-    campaignName: 'Google Search - AI & Data Science Master',
+    campaignName: 'Google Search - 12th Pass B.Tech Admissions 2026',
     source: 'Google Ads',
     spend: 4200,
-    leadsCount: 100,
-    qualifiedLeads: 48,
-    applications: 22,
-    admissions: 12,
-    cpl: 42,
-    cac: 350,
-    roiPercent: 340
+    leadsCount: 120,
+    qualifiedLeads: 85,
+    applications: 42,
+    admissions: 28,
+    cpl: 35,
+    cac: 150,
+    roiPercent: 520
   },
   {
     id: 'camp-2',
-    campaignName: 'Meta Instagram Stories - MERN & Web Dev',
+    campaignName: 'Instagram Stories - Class 12th BBA & BCA College Search',
     source: 'Instagram',
     spend: 2800,
-    leadsCount: 85,
-    qualifiedLeads: 35,
-    applications: 14,
-    admissions: 8,
-    cpl: 32.9,
-    cac: 350,
-    roiPercent: 280
+    leadsCount: 95,
+    qualifiedLeads: 60,
+    applications: 32,
+    admissions: 20,
+    cpl: 29.4,
+    cac: 140,
+    roiPercent: 440
   }
 ];
 
@@ -269,9 +274,9 @@ export const MOCK_CAMPAIGN_ROI = CAMPAIGN_ROI_DATA;
 export const AUTOMATION_RULES: AutomationRule[] = [
   {
     id: 'rule-1',
-    name: 'Auto-Assign High Intent AI Leads to Senior Telecaller',
-    trigger: 'Lead Source = Google Ads AND Course = Data Science & AI',
-    action: 'Assign to Sarah Jenkins & Send Instant WhatsApp Brochure',
+    name: 'Auto-Assign High 12th Board Marks (>85%) to Senior Admissions Officer',
+    trigger: 'Qualification = 12th Science PCM AND Board Marks > 85%',
+    action: 'Assign to Marcus Chen & Send Instant Admission Form Code',
     enabled: true
   }
 ];
@@ -282,7 +287,7 @@ export const AUDIT_TRAIL_LOGS: AuditLogEntry[] = [
     timestamp: '2026-08-16T10:30:00Z',
     user: 'Marcus Chen',
     role: 'Team Leader',
-    action: 'Lead Reassignment',
+    action: '12th Application Reassignment',
     targetLeadId: 'lead-103',
     leadName: 'David Kim',
     fieldChanged: 'Assigned Counsellor',
@@ -294,7 +299,7 @@ export const AUDIT_TRAIL_LOGS: AuditLogEntry[] = [
     timestamp: '2026-08-15T14:20:00Z',
     user: 'Sarah Jenkins',
     role: 'Counsellor',
-    action: 'Status Pipeline Update',
+    action: 'Undergrad Status Update',
     targetLeadId: 'lead-101',
     leadName: 'Rohan Mehta',
     fieldChanged: 'Status Stage',
@@ -314,11 +319,11 @@ export const MOCK_CALL_RECORDINGS: CallRecording[] = [
     direction: 'Outbound',
     counsellorName: 'Sarah Jenkins',
     disposition: 'Interested',
-    transcriptionText: 'Hi Rohan! Following up on your Data Science & AI Master Bootcamp application. We discussed batch timing and placement support.',
-    aiSummary: 'Student interested in Morning Batch. Requested fee installment plan.',
-    aiObjections: ['Fee structure', 'Weekend vs Morning timing'],
-    aiNextBestAction: 'Send WhatsApp fee receipt link & schedule follow-up call.',
-    aiCallScore: 92,
-    scoreBreakdown: { greeting: 18, discovery: 19, explanation: 19, objectionHandling: 18, closing: 18 }
+    transcriptionText: 'Hello Rohan! Congratulations on passing 12th PCM with 88.5%. We discussed B.Tech CSE seat allocation and campus tour dates.',
+    aiSummary: 'Student passed 12th PCM. Applying for B.Tech Computer Science & AI 4-Year Degree.',
+    aiObjections: ['Hostel availability', 'Merit scholarship threshold'],
+    aiNextBestAction: 'Send campus prospectus and schedule parent counseling session.',
+    aiCallScore: 95,
+    scoreBreakdown: { greeting: 19, discovery: 19, explanation: 19, objectionHandling: 19, closing: 19 }
   }
 ];

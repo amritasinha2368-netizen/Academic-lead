@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerLeads, createServerLead } from '@/lib/server-db';
 
-// GET /api/leads - Filter & List Leads
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -11,50 +10,29 @@ export async function GET(request: NextRequest) {
     const source = searchParams.get('source') || undefined;
     const counsellorId = searchParams.get('counsellorId') || undefined;
 
-    const leads = getServerLeads({
-      searchQuery,
-      status,
-      course,
-      source,
-      counsellorId,
-    });
+    let leads = await getServerLeads();
 
-    return NextResponse.json({
-      success: true,
-      count: leads.length,
-      data: leads,
-    });
-  } catch (error: any) {
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 500 }
-    );
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      leads = leads.filter((l) => l.name.toLowerCase().includes(q) || l.phone.includes(q) || l.email.toLowerCase().includes(q));
+    }
+    if (status && status !== 'All') leads = leads.filter((l) => l.status === status);
+    if (course && course !== 'All') leads = leads.filter((l) => l.course === course);
+    if (source && source !== 'All') leads = leads.filter((l) => l.source === source);
+    if (counsellorId && counsellorId !== 'All') leads = leads.filter((l) => l.assignedCounsellorId === counsellorId);
+
+    return NextResponse.json({ leads, count: leads.length });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to fetch leads' }, { status: 500 });
   }
 }
 
-// POST /api/leads - Submit Lead (Enquiry Form & Chatbot API)
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-
-    if (!body.name || !body.phone) {
-      return NextResponse.json(
-        { success: false, error: 'Student Name and Phone number are required.' },
-        { status: 400 }
-      );
-    }
-
-    const { lead, duplicateResult } = createServerLead(body);
-
-    return NextResponse.json({
-      success: true,
-      data: lead,
-      duplicateCheck: duplicateResult,
-    });
-  } catch (error: any) {
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 500 }
-    );
+    const newLead = await createServerLead(body);
+    return NextResponse.json({ success: true, lead: newLead }, { status: 201 });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to create lead' }, { status: 500 });
   }
 }

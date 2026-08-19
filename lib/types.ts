@@ -12,6 +12,24 @@ export type LeadStatus =
   | 'Enrolled' 
   | 'Dropped';
 
+export type CallDisposition = LeadStatus;
+
+export type LostReason = 
+  | 'Not Interested'
+  | 'No Response'
+  | 'Wrong Number'
+  | 'Duplicate'
+  | 'Fee-Location-Timing Issue'
+  | 'Competitor'
+  | 'Future Requirement'
+  | 'Unqualified'
+  | 'Fees Too High' 
+  | 'Joined Another College' 
+  | 'Course Not Available' 
+  | 'Location Constraint' 
+  | 'Not Eligible' 
+  | 'Other';
+
 export type LeadSource = 
   | 'Homepage' 
   | 'Google Ads' 
@@ -19,22 +37,8 @@ export type LeadSource =
   | 'Referral' 
   | 'Walk-in' 
   | 'Brochure Gate' 
-  | 'Callback Request'
-  | 'AI Chatbot'
-  | 'Events'
-  | 'Meta Ads';
-
-export type Qualification = 
-  | 'High School' 
-  | 'Undergraduate' 
-  | 'Postgraduate' 
-  | 'Working Professional' 
-  | 'Other';
-
-export type PreferredBatch = 
-  | 'Morning (9 AM - 12 PM)' 
-  | 'Evening (6 PM - 9 PM)' 
-  | 'Weekend (Sat-Sun)';
+  | 'Callback Request' 
+  | 'AI Chatbot';
 
 export type UserRole = 
   | 'Super Admin' 
@@ -43,88 +47,46 @@ export type UserRole =
   | 'Marketing Admin' 
   | 'Finance';
 
-export type LostReason = 
-  | 'Not Interested' 
-  | 'No Response' 
-  | 'Wrong Number' 
-  | 'Duplicate' 
-  | 'Fee-Location-Timing Issue' 
-  | 'Competitor' 
-  | 'Future Requirement' 
-  | 'Unqualified';
+/* 12th Pass High School Stream Qualification */
+export type Qualification = 
+  | '12th Science (PCM)'
+  | '12th Science (PCB)'
+  | '12th Commerce'
+  | '12th Arts / Humanities'
+  | '12th Pass (Awaiting Result)';
 
-export type CallDisposition = 
-  | 'Connected' 
-  | 'Busy' 
-  | 'No Answer' 
-  | 'Wrong Number' 
-  | 'Interested' 
-  | 'Not Interested' 
-  | 'Call Back' 
-  | 'Follow-up';
+export type PreferredBatch = 
+  | 'Regular Morning College Batch' 
+  | 'Day Honors College Batch' 
+  | 'Integrated Hostel Batch';
 
-export type DocumentStatus = 'Pending' | 'Approved' | 'Rejected' | 'Missing';
-
-export interface Counsellor {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  avatar: string;
-  role: 'Senior Counsellor' | 'Admissions Manager' | 'Academic Advisor' | 'Team Lead';
-  assignedLeadCount?: number;
-}
+export type DocumentStatus = 'Pending' | 'Approved' | 'Rejected';
 
 export interface ActivityLog {
   id: string;
-  type: 'Note' | 'Status Change' | 'Counsellor Assigned' | 'Auto-Acknowledgement' | 'Duplicate Alert' | 'Call Log' | 'Direct Message' | 'Payment' | 'Document Verification' | 'Manager Escalation';
+  type: 'Note' | 'Status Change' | 'Counsellor Assigned' | 'Auto-Acknowledgement' | 'Call Log' | 'Payment' | 'Document Verification';
   author: string;
   message: string;
   timestamp: string;
 }
 
-export interface CallRecording {
-  id: string;
-  url: string;
-  durationSeconds: number;
-  timestamp: string;
-  direction: 'Outbound' | 'Inbound';
-  counsellorName: string;
-  disposition: CallDisposition;
-  transcriptionText: string;
-  aiSummary: string;
-  aiObjections: string[];
-  aiNextBestAction: string;
-  aiCallScore: number; // 0 - 100
-  scoreBreakdown: {
-    greeting: number;
-    discovery: number;
-    explanation: number;
-    objectionHandling: number;
-    closing: number;
-  };
-}
-
 export interface DocumentAttachment {
   id: string;
   title: string;
-  type: 'Dissertation' | 'ID Proof' | 'Marksheet' | 'Certificate' | 'Address Proof';
+  type: '12th Marksheet' | 'ID Proof' | 'Transfer Certificate' | 'Admit Card';
   fileName: string;
   fileSize: string;
   uploadDate: string;
-  fileUrl?: string;
   abstractText?: string;
   status: DocumentStatus;
-  verifierNotes?: string;
-  ocrAlerts?: string[];
 }
 
 export interface PaymentRecord {
   id: string;
   amount: number;
   date: string;
-  paymentMethod: 'Credit Card' | 'Bank Transfer' | 'Installment Plan' | 'Scholarship Grant';
-  status: 'Paid' | 'Pending';
+  paymentMethod: 'Credit Card' | 'Bank Transfer' | 'Installment Plan' | 'UPI';
+  status: 'Paid' | 'Pending' | 'Refunded';
   receiptNumber: string;
   notes?: string;
 }
@@ -135,8 +97,100 @@ export interface ScheduledCall {
   scheduledTime: string;
   notes: string;
   completed: boolean;
-  assignedCounsellorId: string;
+  assignedCounsellorId?: string;
   isOverdue?: boolean;
+}
+
+export interface CallRecording {
+  id: string;
+  url: string;
+  durationSeconds: number;
+  timestamp: string;
+  direction: 'Inbound' | 'Outbound';
+  counsellorName: string;
+  disposition: LeadStatus;
+  transcriptionText: string;
+  aiSummary: string;
+  aiObjections: string[];
+  aiNextBestAction: string;
+  aiCallScore: number;
+  scoreBreakdown: {
+    greeting: number;
+    discovery: number;
+    explanation: number;
+    objectionHandling: number;
+    closing: number;
+  };
+}
+
+export interface Lead {
+  id: string;
+  name: string;
+  phone: string;
+  alternatePhone?: string;
+  email: string;
+  address?: string;
+  city: string;
+  center?: string;
+  course: string; // Target College Degree (B.Tech, BBA, BCA, B.Sc)
+  qualification: Qualification; // 12th Pass Stream
+  class12Percentage?: number; // 12th Board Marks %
+  preferredBatch: PreferredBatch;
+  graduationYear?: string; // 2026 12th Pass
+  workExperience?: string;
+  message?: string;
+  status: LeadStatus;
+  source: LeadSource;
+  utmSource?: string;
+  utmMedium?: string;
+  utmCampaign?: string;
+  entryPoint?: string;
+  assignedCounsellorId?: string;
+  dateAdded: string;
+  isDuplicate?: boolean;
+  duplicateCount?: number;
+  duplicateOfId?: string;
+  aiLeadScore?: number;
+  totalCourseFee?: number;
+  enrolledStudentId?: string;
+  escalatedToManager?: boolean;
+  ackSent?: {
+    email: boolean;
+    sms: boolean;
+    whatsapp: boolean;
+    timestamp: string;
+  };
+  notes?: string;
+  activityHistory: ActivityLog[];
+  documents: DocumentAttachment[];
+  payments: PaymentRecord[];
+  scheduledCalls: ScheduledCall[];
+  callRecordings: CallRecording[];
+}
+
+export interface Counsellor {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  avatar: string;
+  role: string;
+}
+
+export interface FilterOptions {
+  searchQuery: string;
+  status: LeadStatus | 'All';
+  course: string;
+  source: LeadSource | 'All';
+  counsellorId: string;
+  city: string;
+  duplicateOnly: boolean;
+}
+
+export interface DuplicateCheckResult {
+  isDuplicate: boolean;
+  matchingLead?: Lead;
+  matchReason?: 'phone' | 'email' | 'both';
 }
 
 export interface CampaignROI {
@@ -172,69 +226,4 @@ export interface AuditLogEntry {
   fieldChanged?: string;
   oldValue?: string;
   newValue?: string;
-}
-
-export interface Lead {
-  id: string;
-  name: string;
-  phone: string;
-  alternatePhone?: string;
-  email: string;
-  address?: string;
-  city: string;
-  center?: string;
-  batch?: string;
-  course: string;
-  qualification: Qualification;
-  preferredBatch: PreferredBatch;
-  graduationYear?: string;
-  workExperience?: string;
-  message?: string;
-  status: LeadStatus;
-  source: LeadSource;
-  utmSource?: string;
-  utmMedium?: string;
-  utmCampaign?: string;
-  entryPoint: 'Enroll Form' | 'Callback Modal' | 'Brochure Download' | 'Manual Add' | 'AI Chatbot';
-  assignedCounsellorId?: string;
-  dateAdded: string;
-  isDuplicate?: boolean;
-  duplicateCount?: number;
-  duplicateOfId?: string;
-  enrolledStudentId?: string;
-  totalCourseFee?: number;
-  lostReason?: LostReason;
-  lostReasonNotes?: string;
-  escalatedToManager?: boolean;
-  aiLeadScore?: number;
-  ackSent?: {
-    email: boolean;
-    sms: boolean;
-    whatsapp: boolean;
-    timestamp: string;
-  };
-  notes?: string;
-  activityHistory: ActivityLog[];
-  documents: DocumentAttachment[];
-  payments: PaymentRecord[];
-  scheduledCalls: ScheduledCall[];
-  callRecordings: CallRecording[];
-}
-
-export interface FilterOptions {
-  searchQuery: string;
-  status: LeadStatus | 'All';
-  course: string | 'All';
-  source: LeadSource | 'All';
-  counsellorId: string | 'All';
-  city: string | 'All';
-  duplicateOnly: boolean;
-  overdueOnly?: boolean;
-  escalatedOnly?: boolean;
-}
-
-export interface DuplicateCheckResult {
-  isDuplicate: boolean;
-  matchingLead?: Lead;
-  matchReason?: 'phone' | 'email' | 'both';
 }

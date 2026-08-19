@@ -1,36 +1,27 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useLeadStore } from '@/lib/lead-store';
 import { COURSES, CITIES } from '@/lib/mock-data';
-import { LeadSource, Qualification, PreferredBatch } from '@/lib/types';
-import { 
-  IconSparkles, 
-  IconAlertTriangle,
-  IconSend,
-  IconLock
-} from '@/components/ui/Icons';
+import { PreferredBatch, Qualification } from '@/lib/types';
+import { IconCheckCircle, IconSend, IconSparkles, IconAlertTriangle } from '@/components/ui/Icons';
 
 interface EnquiryFormProps {
-  sourceOverride?: LeadSource;
-  entryPoint?: 'Enroll Form' | 'Callback Modal' | 'Brochure Download';
-  utmSource?: string;
-  utmCampaign?: string;
-  onSubmittedSuccess?: () => void;
+  entryPoint?: string;
+  sourceOverride?: string;
   title?: string;
   subtitle?: string;
+  onSubmittedSuccess?: () => void;
 }
 
 export const EnquiryForm: React.FC<EnquiryFormProps> = ({
+  entryPoint = 'Homepage Enquiry Form',
   sourceOverride,
-  entryPoint = 'Enroll Form',
-  utmSource = 'google_ads',
-  utmCampaign = 'summer_bootcamp_2026',
+  title = 'Class 12th College Application Form',
+  subtitle = 'Undergraduate Degree Admissions 2026',
   onSubmittedSuccess,
-  title = "Apply Now & Secure Your Seat",
-  subtitle = "Fill in your details to receive full syllabus details and fee structure"
 }) => {
-  const { addLeadFromWebsite, leads } = useLeadStore();
+  const { addLeadFromWebsite } = useLeadStore();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -38,300 +29,212 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
     email: '',
     city: CITIES[0],
     course: COURSES[0],
-    qualification: 'Undergraduate' as Qualification,
-    preferredBatch: 'Morning (9 AM - 12 PM)' as PreferredBatch,
+    qualification: '12th Science (PCM)' as Qualification,
+    class12Percentage: 88,
+    preferredBatch: 'Regular Morning College Batch' as PreferredBatch,
     message: '',
-    honeypot: '', // Spam bot detection field
+    honeypot: '',
   });
 
-  // Math CAPTCHA states
-  const [num1, setNum1] = useState(7);
-  const [num2, setNum2] = useState(4);
-  const [captchaInput, setCaptchaInput] = useState('');
-  const [captchaError, setCaptchaError] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [duplicateAlert, setDuplicateAlert] = useState<{ isDuplicate: boolean; matchReason?: string } | null>(null);
 
-  // Live duplicate warning state
-  const [isLiveDuplicate, setIsLiveDuplicate] = useState(false);
-
-  // Generate random captcha on mount
-  useEffect(() => {
-    setNum1(Math.floor(Math.random() * 8) + 2);
-    setNum2(Math.floor(Math.random() * 8) + 1);
-  }, []);
-
-  // Check duplicate live as user types phone
-  useEffect(() => {
-    const cleanPhone = formData.phone.replace(/\D/g, '');
-    const cleanEmail = formData.email.toLowerCase().trim();
-    if (cleanPhone.length >= 7 || cleanEmail.length >= 5) {
-      const found = leads.some((l) => {
-        const p = l.phone.replace(/\D/g, '');
-        const e = l.email.toLowerCase().trim();
-        return (cleanPhone.length >= 7 && p === cleanPhone) || (cleanEmail.length >= 5 && e === cleanEmail);
-      });
-      setIsLiveDuplicate(found);
-    } else {
-      setIsLiveDuplicate(false);
-    }
-  }, [formData.phone, formData.email, leads]);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 1. Spam Honeypot Check
-    if (formData.honeypot.trim() !== '') {
-      console.warn('Bot detected via honeypot');
-      return;
-    }
+    if (formData.honeypot) return;
+    if (!formData.name || !formData.phone || !formData.email) return;
 
-    // 2. CAPTCHA verification
-    if (parseInt(captchaInput) !== num1 + num2) {
-      setCaptchaError(true);
-      return;
-    }
-    setCaptchaError(false);
-
-    // 3. Dispatch to Lead Store
-    const finalSource: LeadSource = sourceOverride || (utmSource === 'instagram' ? 'Instagram' : utmSource === 'google' ? 'Google Ads' : 'Homepage');
-
-    addLeadFromWebsite({
+    const result = addLeadFromWebsite({
       name: formData.name,
       phone: formData.phone,
       email: formData.email,
       city: formData.city,
       course: formData.course,
       qualification: formData.qualification,
+      class12Percentage: Number(formData.class12Percentage),
       preferredBatch: formData.preferredBatch,
       message: formData.message,
-      source: finalSource,
-      utmSource: utmSource,
-      utmMedium: 'cpc',
-      utmCampaign: utmCampaign,
-      entryPoint: entryPoint,
+      source: (sourceOverride as any) || 'Homepage',
+      utmSource: 'website',
+      utmMedium: 'organic',
+      utmCampaign: 'undergrad_admissions_2026',
+      entryPoint,
     });
 
-    // Reset form fields
+    if (result.duplicateResult.isDuplicate) {
+      setDuplicateAlert({
+        isDuplicate: true,
+        matchReason: result.duplicateResult.matchReason,
+      });
+    }
+
+    setSubmitted(true);
+    if (onSubmittedSuccess) onSubmittedSuccess();
+
     setFormData({
       name: '',
       phone: '',
       email: '',
       city: CITIES[0],
       course: COURSES[0],
-      qualification: 'Undergraduate',
-      preferredBatch: 'Morning (9 AM - 12 PM)',
+      qualification: '12th Science (PCM)',
+      class12Percentage: 88,
+      preferredBatch: 'Regular Morning College Batch',
       message: '',
       honeypot: '',
     });
-    setCaptchaInput('');
-
-    if (onSubmittedSuccess) {
-      onSubmittedSuccess();
-    }
   };
 
   return (
-    <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-2xl backdrop-blur-xl relative overflow-hidden">
-      
-      {/* Decorative ambient background glow */}
-      <div className="absolute -top-24 -right-24 w-48 h-48 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
-
-      {/* Form Header */}
-      <div className="mb-5 space-y-1">
-        <div className="flex items-center space-x-2">
-          <IconSparkles className="w-5 h-5 text-blue-400" />
-          <h3 className="font-extrabold text-lg text-white">{title}</h3>
+    <div className="ls-card p-6 bg-white space-y-4">
+      <div className="border-b border-slate-200 pb-3 flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-black text-slate-900">{title}</h2>
+          <p className="text-xs text-slate-600 font-bold mt-0.5">{subtitle}</p>
         </div>
-        <p className="text-xs text-slate-400">{subtitle}</p>
+        {submitted && (
+          <span className="px-3 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-900 border border-emerald-300 flex items-center space-x-1">
+            <IconCheckCircle className="w-4 h-4 text-emerald-700" />
+            <span>Submitted!</span>
+          </span>
+        )}
       </div>
 
-      {/* Live Duplicate Alert Banner */}
-      {isLiveDuplicate && (
-        <div className="mb-4 p-3 rounded-xl bg-rose-950/40 border border-rose-500/40 text-xs flex items-start space-x-2 text-rose-300">
-          <IconAlertTriangle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+      {duplicateAlert && (
+        <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs font-bold flex items-center space-x-2">
+          <IconAlertTriangle className="w-5 h-5 text-amber-700 shrink-0" />
           <div>
-            <span className="font-bold">Duplicate Detected:</span> An enquiry with this phone/email already exists in our academy portal. Submitting will flag this record for merge review.
+            <strong>Duplicate Application Detected ({duplicateAlert.matchReason} match):</strong> Your application has been logged and merged with your primary student profile.
           </div>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-        
-        {/* Spam Honeypot Hidden Input */}
+      <form onSubmit={handleSubmit} className="space-y-4 text-xs font-bold">
         <input
           type="text"
-          name="website_url_hp"
+          name="honeypot"
           value={formData.honeypot}
-          onChange={(e) => setFormData({ ...formData, honeypot: e.target.value })}
+          onChange={handleChange}
           className="hidden"
           tabIndex={-1}
           autoComplete="off"
         />
 
-        {/* Full Name */}
-        <div>
-          <label className="font-bold text-slate-300 block mb-1">Full Student Name *</label>
-          <input
-            type="text"
-            required
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            placeholder="e.g. Sophia Martinez"
-            className="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-          />
-        </div>
-
-        {/* Contact Phone & Email Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="font-bold text-slate-300 block mb-1">Phone Number *</label>
+            <label className="block text-slate-600 mb-1">Full Name *</label>
+            <input
+              type="text"
+              name="name"
+              required
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="e.g. Rohan Mehta"
+              className="w-full p-2.5 bg-slate-100 border border-slate-300 rounded-xl text-slate-900 font-bold focus:outline-none focus:border-blue-600"
+            />
+          </div>
+          <div>
+            <label className="block text-slate-600 mb-1">Phone Number *</label>
             <input
               type="tel"
+              name="phone"
               required
               value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              placeholder="+1 (555) 987-6543"
-              className="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-            />
-          </div>
-          <div>
-            <label className="font-bold text-slate-300 block mb-1">Email Address *</label>
-            <input
-              type="email"
-              required
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              placeholder="sophia@example.com"
-              className="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+              onChange={handleChange}
+              placeholder="+1 (555) 912-3456"
+              className="w-full p-2.5 bg-slate-100 border border-slate-300 rounded-xl text-slate-900 font-mono font-bold focus:outline-none focus:border-blue-600"
             />
           </div>
         </div>
 
-        {/* Course Interested In */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-slate-600 mb-1">Email Address *</label>
+            <input
+              type="email"
+              name="email"
+              required
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="student@example.com"
+              className="w-full p-2.5 bg-slate-100 border border-slate-300 rounded-xl text-slate-900 font-bold focus:outline-none focus:border-blue-600"
+            />
+          </div>
+          <div>
+            <label className="block text-slate-600 mb-1">Current City</label>
+            <select
+              name="city"
+              value={formData.city}
+              onChange={handleChange}
+              className="w-full p-2.5 bg-slate-100 border border-slate-300 rounded-xl text-slate-900 font-bold focus:outline-none"
+            >
+              {CITIES.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* 12th Stream & Percentage */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-slate-600 mb-1">12th Grade Stream *</label>
+            <select
+              name="qualification"
+              value={formData.qualification}
+              onChange={handleChange}
+              className="w-full p-2.5 bg-slate-100 border border-slate-300 rounded-xl text-slate-900 font-bold focus:outline-none"
+            >
+              <option value="12th Science (PCM)">12th Science (PCM)</option>
+              <option value="12th Science (PCB)">12th Science (PCB)</option>
+              <option value="12th Commerce">12th Commerce</option>
+              <option value="12th Arts / Humanities">12th Arts / Humanities</option>
+              <option value="12th Pass (Awaiting Result)">12th Pass (Awaiting Result)</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-slate-600 mb-1">12th Board Score (%)</label>
+            <input
+              type="number"
+              name="class12Percentage"
+              min="35"
+              max="100"
+              value={formData.class12Percentage}
+              onChange={handleChange}
+              placeholder="88.5"
+              className="w-full p-2.5 bg-slate-100 border border-slate-300 rounded-xl text-slate-900 font-mono font-bold focus:outline-none focus:border-blue-600"
+            />
+          </div>
+        </div>
+
         <div>
-          <label className="font-bold text-slate-300 block mb-1">Course / Program Interested In *</label>
+          <label className="block text-slate-600 mb-1">Target College Degree Program *</label>
           <select
+            name="course"
             value={formData.course}
-            onChange={(e) => setFormData({ ...formData, course: e.target.value })}
-            className="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 focus:outline-none focus:border-blue-500 truncate"
+            onChange={handleChange}
+            className="w-full p-2.5 bg-slate-100 border border-slate-300 rounded-xl text-slate-900 font-extrabold focus:outline-none"
           >
-            {COURSES.map((course) => (
-              <option key={course} value={course}>
-                {course}
-              </option>
+            {COURSES.map((c) => (
+              <option key={c} value={c}>{c}</option>
             ))}
           </select>
         </div>
 
-        {/* City & Qualification Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label className="font-bold text-slate-300 block mb-1">Current City *</label>
-            <select
-              value={formData.city}
-              onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-              className="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 focus:outline-none focus:border-blue-500"
-            >
-              {CITIES.map((city) => (
-                <option key={city} value={city}>
-                  {city}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="font-bold text-slate-300 block mb-1">Highest Qualification</label>
-            <select
-              value={formData.qualification}
-              onChange={(e) => setFormData({ ...formData, qualification: e.target.value as Qualification })}
-              className="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 focus:outline-none focus:border-blue-500"
-            >
-              <option value="High School">High School</option>
-              <option value="Undergraduate">Undergraduate</option>
-              <option value="Postgraduate">Postgraduate</option>
-              <option value="Working Professional">Working Professional</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Preferred Batch */}
-        <div>
-          <label className="font-bold text-slate-300 block mb-1">Preferred Batch Schedule</label>
-          <div className="grid grid-cols-3 gap-2">
-            {(['Morning (9 AM - 12 PM)', 'Evening (6 PM - 9 PM)', 'Weekend (Sat-Sun)'] as const).map((batch) => (
-              <button
-                key={batch}
-                type="button"
-                onClick={() => setFormData({ ...formData, preferredBatch: batch })}
-                className={`py-2 px-1 rounded-xl text-[11px] font-semibold border transition-all text-center ${
-                  formData.preferredBatch === batch
-                    ? 'bg-blue-600/20 text-blue-400 border-blue-500/60 shadow-sm'
-                    : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200'
-                }`}
-              >
-                {batch.split(' ')[0]}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Additional Message */}
-        <div>
-          <label className="font-bold text-slate-300 block mb-1">Message / Career Goals (Optional)</label>
-          <textarea
-            rows={2}
-            value={formData.message}
-            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-            placeholder="Tell us about your background or specific batch requirements..."
-            className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-          />
-        </div>
-
-        {/* Bot & Spam CAPTCHA Verification */}
-        <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="font-bold text-slate-300 flex items-center space-x-1.5">
-              <IconLock className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Spam / Bot Validation: Solve Math Quiz</span>
-            </span>
-            <span className="font-mono font-extrabold text-blue-400 text-sm px-2 py-0.5 rounded bg-blue-500/10">
-              {num1} + {num2} = ?
-            </span>
-          </div>
-
-          <div className="flex space-x-2">
-            <input
-              type="number"
-              required
-              value={captchaInput}
-              onChange={(e) => setCaptchaInput(e.target.value)}
-              placeholder="Enter answer"
-              className="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-white font-mono focus:outline-none focus:border-blue-500"
-            />
-          </div>
-          {captchaError && (
-            <p className="text-[11px] text-rose-400 font-semibold">Incorrect answer. Please solve the security question.</p>
-          )}
-        </div>
-
-        {/* Source & Entry Metadata Tag Footnote */}
-        <div className="text-[10px] text-slate-500 flex items-center justify-between pt-1">
-          <span>Source Tag: <code className="text-slate-400">{sourceOverride || utmSource}</code></span>
-          <span>Entry Point: <code className="text-slate-400">{entryPoint}</code></span>
-        </div>
-
-        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-sm rounded-xl transition-all shadow-lg shadow-blue-600/30 flex items-center justify-center space-x-2"
+          className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl shadow-md transition-all flex items-center justify-center space-x-2"
         >
           <IconSend className="w-4 h-4" />
-          <span>Submit Enquiry & Get Course Details</span>
+          <span>Submit College Application</span>
         </button>
-
       </form>
-
     </div>
   );
 };

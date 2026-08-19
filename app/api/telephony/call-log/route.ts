@@ -2,80 +2,63 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerLeadById, updateServerLead } from '@/lib/server-db';
 import { CallRecording, CallDisposition } from '@/lib/types';
 
-// POST /api/telephony/call-log - Record Telephony Call & AI Quality Score
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { leadId, durationSeconds, disposition, summaryNotes, counsellorName } = body;
+    const { leadId, durationSeconds, summaryNotes, disposition, counsellorName } = body;
 
     if (!leadId) {
-      return NextResponse.json(
-        { success: false, error: 'Target Lead ID is required.' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing leadId' }, { status: 400 });
     }
 
-    const lead = getServerLeadById(leadId);
+    const lead = await getServerLeadById(leadId);
     if (!lead) {
-      return NextResponse.json(
-        { success: false, error: 'Lead not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Lead record not found' }, { status: 404 });
     }
 
-    const mins = Math.floor((durationSeconds || 120) / 60);
-    const secs = (durationSeconds || 120) % 60;
+    const duration = durationSeconds || 120;
+    const mins = Math.floor(duration / 60);
+    const secs = duration % 60;
     const durText = `${mins}m ${secs}s`;
 
-    // Simulated AI Speech-to-Text & QA Score Engine
-    const aiScore = Math.floor(75 + Math.random() * 20); // 75 - 95 score
-    const newRecording: CallRecording = {
+    const newCallLog: CallRecording = {
       id: `rec-${Date.now()}`,
-      url: 'https://actions.google.com/sounds/v1/ambiences/office_space.ogg',
-      durationSeconds: durationSeconds || 180,
+      url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+      durationSeconds: duration,
       timestamp: new Date().toISOString(),
       direction: 'Outbound',
       counsellorName: counsellorName || 'Sarah Jenkins',
       disposition: (disposition as CallDisposition) || 'Interested',
-      transcriptionText: `Counsellor: Hello ${lead.name}! Following up regarding your inquiry for ${lead.course}. Student: Yes, I want to review the syllabus and batch schedule.`,
-      aiSummary: summaryNotes || 'Outbound telecaller conversation regarding curriculum details and fee installment options.',
-      aiObjections: ['Inquired about weekend vs evening batch schedule flexibilities'],
-      aiNextBestAction: 'Send syllabus PDF and follow up within 48 hours.',
-      aiCallScore: aiScore,
+      transcriptionText: `Counsellor: Hello ${lead.name}! Following up regarding your 12th college application for ${lead.course}. Student: Yes, I want to review the campus prospectus and hostel fee structure.`,
+      aiSummary: summaryNotes || 'Outbound telecaller conversation regarding 12th board eligibility and campus visit booking.',
+      aiObjections: ['Inquired about 12th board percentage cutoff criteria'],
+      aiNextBestAction: 'Send 12th college prospectus PDF and schedule campus tour.',
+      aiCallScore: 92,
       scoreBreakdown: {
         greeting: 18,
-        discovery: 18,
-        explanation: 18,
-        objectionHandling: 16,
-        closing: 15
-      }
+        discovery: 19,
+        explanation: 19,
+        objectionHandling: 18,
+        closing: 18,
+      },
     };
 
-    const updated = updateServerLead(leadId, {
-      status: lead.status === 'New' ? 'Contacted' : lead.status,
-      callRecordings: [newRecording, ...lead.callRecordings],
+    const updatedLead = await updateServerLead(leadId, {
+      callRecordings: [newCallLog, ...(lead.callRecordings || [])],
       activityHistory: [
         {
           id: `act-${Date.now()}`,
           type: 'Call Log',
-          author: counsellorName || 'Softphone API',
-          message: `Outbound call completed (${durText}). AI Quality Score: ${aiScore}/100. Notes: "${summaryNotes || 'Call logged successfully.'}"`,
-          timestamp: new Date().toISOString()
+          author: counsellorName || 'Admissions Officer',
+          message: `Outbound call completed (${durText}). Remarks: "${summaryNotes || 'No notes entered.'}"`,
+          timestamp: new Date().toISOString(),
         },
-        ...lead.activityHistory
-      ]
+        ...(lead.activityHistory || []),
+      ],
     });
 
-    return NextResponse.json({
-      success: true,
-      data: updated,
-      callRecording: newRecording
-    });
-
-  } catch (error: any) {
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: true, lead: updatedLead, callLog: newCallLog });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to record call log' }, { status: 500 });
   }
 }

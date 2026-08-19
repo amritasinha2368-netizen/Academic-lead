@@ -86,13 +86,14 @@ interface LeadContextType {
 
 const LeadContext = createContext<LeadContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'aura_academy_leads_v2';
+const STORAGE_KEY = 'aura_academy_leads_v3';
 const THEME_KEY = 'aura_crm_theme';
 
 const sanitizeLead = (lead: any): Lead => ({
   ...lead,
   status: lead.status || 'New',
   source: lead.source || 'Homepage',
+  qualification: lead.qualification || '12th Science (PCM)',
   activityHistory: Array.isArray(lead.activityHistory) ? lead.activityHistory : [],
   documents: Array.isArray(lead.documents) ? lead.documents : [],
   payments: Array.isArray(lead.payments) ? lead.payments : [],
@@ -107,7 +108,7 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [kanbanViewMode, setKanbanViewMode] = useState<'board' | 'table'>('table');
   const [selectedLeadIds, setSelectedLeadIds] = useState<string[]>([]);
   
-  // Theme Mode - Light by Default
+  // Theme Mode
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   // Role & User Context
@@ -139,14 +140,6 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (Array.isArray(parsed) && parsed.length > 0) {
           setLeads(parsed.map(sanitizeLead));
         }
-      }
-      const savedTheme = localStorage.getItem(THEME_KEY) as 'light' | 'dark';
-      if (savedTheme) {
-        setTheme(savedTheme);
-        if (savedTheme === 'dark') document.documentElement.classList.add('dark');
-        else document.documentElement.classList.remove('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
       }
     } catch (e) {
       console.error('Failed to load leads from storage', e);
@@ -224,7 +217,7 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { isDuplicate: false };
   };
 
-  // Add lead from website, form, or chatbot
+  // Add lead from website or form
   const addLeadFromWebsite = (newLeadData: Partial<Lead>) => {
     const dupCheck = checkDuplicate(newLeadData.phone || '', newLeadData.email || '');
 
@@ -232,29 +225,30 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const newLead: Lead = {
       id: `lead-${Date.now()}`,
-      name: newLeadData.name || 'Anonymous Student',
+      name: newLeadData.name || '12th Pass Applicant',
       phone: newLeadData.phone || '',
       alternatePhone: newLeadData.alternatePhone || '',
       email: newLeadData.email || '',
-      city: newLeadData.city || 'Online / Remote',
-      course: newLeadData.course || 'Data Science & AI Master Bootcamp',
-      qualification: newLeadData.qualification || 'Undergraduate',
-      preferredBatch: newLeadData.preferredBatch || 'Morning (9 AM - 12 PM)',
-      graduationYear: newLeadData.graduationYear || '2025',
-      workExperience: newLeadData.workExperience || 'None',
+      city: newLeadData.city || 'San Francisco',
+      course: newLeadData.course || 'B.Tech Computer Science & AI',
+      qualification: newLeadData.qualification || '12th Science (PCM)',
+      class12Percentage: newLeadData.class12Percentage || 88,
+      preferredBatch: newLeadData.preferredBatch || 'Regular Morning College Batch',
+      graduationYear: '2026 12th Pass',
+      workExperience: 'Fresh 12th Graduate',
       message: newLeadData.message || '',
       status: 'New',
       source: newLeadData.source || 'Homepage',
       utmSource: newLeadData.utmSource || 'website',
       utmMedium: newLeadData.utmMedium || 'organic',
-      utmCampaign: newLeadData.utmCampaign || 'direct_visit',
-      entryPoint: newLeadData.entryPoint || 'Enroll Form',
+      utmCampaign: newLeadData.utmCampaign || 'undergrad_admissions_2026',
+      entryPoint: newLeadData.entryPoint || '12th Application Form',
       assignedCounsellorId: assignedCounsellor,
       dateAdded: new Date().toISOString(),
       isDuplicate: dupCheck.isDuplicate,
       duplicateCount: dupCheck.isDuplicate ? (dupCheck.matchingLead?.duplicateCount || 1) + 1 : 0,
       duplicateOfId: dupCheck.isDuplicate ? dupCheck.matchingLead?.id : undefined,
-      totalCourseFee: 3200,
+      totalCourseFee: 4800,
       ackSent: {
         email: true,
         sms: true,
@@ -266,33 +260,16 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
         {
           id: `act-${Date.now()}-1`,
           type: 'Auto-Acknowledgement',
-          author: 'System Auto-Ack',
-          message: 'Automated Thank You Email, SMS & WhatsApp dispatched to student.',
+          author: '12th Admissions System API',
+          message: 'Automated College Admission Prospectus, Fee Structure & Welcome Code sent via Email, SMS & WhatsApp.',
           timestamp: new Date().toISOString(),
         },
-        ...(dupCheck.isDuplicate
-          ? [
-              {
-                id: `act-${Date.now()}-2` as string,
-                type: 'Duplicate Alert' as const,
-                author: 'Duplicate Engine',
-                message: `Duplicate detected matching existing lead "${dupCheck.matchingLead?.name}" (${dupCheck.matchReason} match).`,
-                timestamp: new Date().toISOString(),
-              },
-            ]
-          : []),
       ],
       documents: [],
       payments: [],
       scheduledCalls: [],
       callRecordings: [],
     };
-
-    fetch('/api/leads', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newLead),
-    }).catch((err) => console.log('Syncing to server API route:', err));
 
     setLeads((prev) => [newLead, ...prev]);
     setLastAckModal(newLead);
@@ -308,19 +285,13 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateLeadStatus = (id: string, newStatus: LeadStatus) => {
-    fetch(`/api/leads/${id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: newStatus }),
-    }).catch((err) => console.log('Syncing to server API route:', err));
-
     setLeads((prev) =>
       prev.map((lead) => {
         if (lead.id === id) {
           const newActivity: ActivityLog = {
             id: `act-${Date.now()}`,
             type: 'Status Change',
-            author: currentRole === 'Counsellor' ? 'Sarah Jenkins' : 'CRM Manager',
+            author: currentRole === 'Counsellor' ? 'Sarah Jenkins' : 'Admissions Officer',
             message: `Changed status from ${lead.status} to ${newStatus}.`,
             timestamp: new Date().toISOString(),
           };
@@ -337,21 +308,14 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const assignCounsellor = (id: string, counsellorId: string) => {
     const counsellorName = COUNSELLORS.find((c) => c.id === counsellorId)?.name || 'Unassigned';
-    
-    fetch(`/api/leads/${id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ assignedCounsellorId: counsellorId }),
-    }).catch((err) => console.log('Syncing to server API route:', err));
-
     setLeads((prev) =>
       prev.map((lead) => {
         if (lead.id === id) {
           const newActivity: ActivityLog = {
             id: `act-${Date.now()}`,
             type: 'Counsellor Assigned',
-            author: 'Admin Manager',
-            message: `Reassigned lead to ${counsellorName}.`,
+            author: 'Admissions Office',
+            message: `Reassigned 12th applicant to ${counsellorName}.`,
             timestamp: new Date().toISOString(),
           };
           return {
@@ -366,12 +330,6 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const bulkUpdateStatus = (ids: string[], newStatus: LeadStatus) => {
-    fetch('/api/leads/bulk', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ids, status: newStatus }),
-    }).catch((err) => console.log('Syncing bulk API route:', err));
-
     setLeads((prev) =>
       prev.map((lead) => {
         if (ids.includes(lead.id)) {
@@ -419,15 +377,11 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const deleteLead = (id: string) => {
-    fetch(`/api/leads/${id}`, {
-      method: 'DELETE',
-    }).catch((err) => console.log('Delete API call:', err));
-
     setLeads((prev) => prev.filter((l) => l.id !== id));
     setSelectedLeadIds((prev) => prev.filter((i) => i !== id));
   };
 
-  const addLeadNote = (id: string, noteText: string, author: string = 'Staff Counsellor') => {
+  const addLeadNote = (id: string, noteText: string, author: string = 'Admissions Counsellor') => {
     setLeads((prev) =>
       prev.map((lead) => {
         if (lead.id === id) {
@@ -457,8 +411,8 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const conversionLog: ActivityLog = {
             id: `act-${Date.now()}`,
             type: 'Status Change',
-            author: 'Admissions Office API',
-            message: `ENROLLED CONVERSION! Lead record converted to official Student ID #${studentId}.`,
+            author: 'College Registrar API',
+            message: `ENROLLED CONVERSION! 12th applicant converted to official Student ID #${studentId}.`,
             timestamp: new Date().toISOString(),
           };
           return {
@@ -488,8 +442,8 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const callLog: ActivityLog = {
             id: `act-${Date.now()}`,
             type: 'Note',
-            author: 'Scheduler Bot',
-            message: `Scheduled follow-up call for ${date} at ${time}. Reminder set.`,
+            author: 'Admissions Scheduler',
+            message: `Scheduled follow-up call with 12th candidate for ${date} at ${time}.`,
             timestamp: new Date().toISOString(),
           };
           return {
@@ -514,9 +468,9 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (lead.id === leadId) {
           const docLog: ActivityLog = {
             id: `act-${Date.now()}`,
-            type: 'Note',
-            author: 'Document Portal',
-            message: `Uploaded document: ${doc.title} (${doc.type}).`,
+            type: 'Document Verification',
+            author: 'Admissions Document Vault',
+            message: `Uploaded 12th document: ${doc.title} (${doc.type}).`,
             timestamp: new Date().toISOString(),
           };
           return {
@@ -543,8 +497,8 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const payLog: ActivityLog = {
             id: `act-${Date.now()}`,
             type: 'Payment',
-            author: 'Billing Gateway API',
-            message: `Received payment of $${payment.amount} via ${payment.paymentMethod}. Receipt #${receipt}.`,
+            author: 'Tuition Fee Gateway API',
+            message: `Received seat booking fee of $${payment.amount}. Receipt #${receipt}.`,
             timestamp: new Date().toISOString(),
           };
           return {
@@ -581,8 +535,8 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const mergedActivity: ActivityLog = {
               id: `act-${Date.now()}`,
               type: 'Note',
-              author: 'Merge Engine API',
-              message: `Merged duplicate enquiry from ${dupLead.entryPoint} (${dupLead.course}). Notes: "${dupLead.message || 'N/A'}"`,
+              author: '12th Application Merge Engine',
+              message: `Merged duplicate application from ${dupLead.entryPoint} (${dupLead.course}).`,
               timestamp: new Date().toISOString(),
             };
             return {
@@ -611,7 +565,7 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
             id: `act-${Date.now()}`,
             type: 'Call Log',
             author: COUNSELLORS.find(c => c.id === activeCounsellorId)?.name || 'Counsellor',
-            message: `Outbound call completed (${durText}). Remarks: "${summaryNotes || 'No notes entered.'}"`,
+            message: `Call completed with 12th candidate (${durText}). Remarks: "${summaryNotes || 'No notes entered.'}"`,
             timestamp: new Date().toISOString(),
           };
           return {

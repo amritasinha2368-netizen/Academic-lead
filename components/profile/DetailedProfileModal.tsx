@@ -7,16 +7,9 @@ import { formatDateString } from '@/lib/utils';
 import { 
   IconX, 
   IconPhone, 
-  IconMail, 
-  IconMapPin, 
-  IconGraduationCap, 
-  IconCalendar, 
-  IconPlus, 
   IconMessageSquare, 
-  IconDownload, 
-  IconCheckCircle, 
-  IconSparkles,
-  IconTag
+  IconTag,
+  IconGraduationCap
 } from '@/components/ui/Icons';
 
 interface DetailedProfileModalProps {
@@ -32,9 +25,7 @@ export const DetailedProfileModal: React.FC<DetailedProfileModalProps> = ({ lead
     assignCounsellor, 
     addLeadNote, 
     convertLeadToStudent,
-    addScheduledCall,
     addDocumentAttachment,
-    addPaymentRecord,
     openDialer,
     openMessageComposer
   } = useLeadStore();
@@ -42,39 +33,19 @@ export const DetailedProfileModal: React.FC<DetailedProfileModalProps> = ({ lead
   const [activeTab, setActiveTab] = useState<'overview' | 'documents' | 'schedule' | 'payments'>('overview');
   
   const [newNoteText, setNewNoteText] = useState('');
-  const [callDate, setCallDate] = useState('2026-08-20');
-  const [callTime, setCallTime] = useState('11:00');
-  const [callNotes, setCallNotes] = useState('');
-
   const [docTitle, setDocTitle] = useState('');
-  const [docType, setDocType] = useState<'Dissertation' | 'ID Proof' | 'Marksheet'>('Dissertation');
-  const [docAbstract, setDocAbstract] = useState('');
-
-  const [payAmount, setPayAmount] = useState(500);
-  const [payMethod, setPayMethod] = useState<'Credit Card' | 'Bank Transfer' | 'Installment Plan'>('Credit Card');
+  const [docType, setDocType] = useState<'12th Marksheet' | 'ID Proof' | 'Transfer Certificate' | 'Admit Card'>('12th Marksheet');
 
   if (!lead) return null;
 
   const currentLead = leads.find((l) => l.id === lead.id) || lead;
   const assignedCounsellor = counsellors.find((c) => c.id === currentLead.assignedCounsellorId);
 
-  const totalFee = currentLead.totalCourseFee || 3200;
-  const totalPaid = (currentLead.payments || []).reduce((sum, p) => sum + (p.status === 'Paid' ? p.amount : 0), 0);
-  const balanceDue = totalFee - totalPaid;
-
   const handleAddNote = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newNoteText.trim()) return;
-    addLeadNote(currentLead.id, newNoteText, assignedCounsellor ? assignedCounsellor.name : 'Staff Counsellor');
+    addLeadNote(currentLead.id, newNoteText, assignedCounsellor ? assignedCounsellor.name : 'Admissions Officer');
     setNewNoteText('');
-  };
-
-  const handleScheduleCall = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!callDate || !callTime) return;
-    addScheduledCall(currentLead.id, callDate, callTime, callNotes || 'Follow-up call');
-    setCallNotes('');
-    alert(`Follow-up call scheduled for ${callDate} at ${callTime}`);
   };
 
   const handleUploadDoc = (e: React.FormEvent) => {
@@ -85,36 +56,22 @@ export const DetailedProfileModal: React.FC<DetailedProfileModalProps> = ({ lead
       type: docType,
       fileName: `${docTitle.replace(/\s+/g, '_')}.pdf`,
       fileSize: '3.4 MB',
-      abstractText: docAbstract,
       status: 'Pending',
     });
     setDocTitle('');
-    setDocAbstract('');
-    alert('Document attached successfully!');
-  };
-
-  const handleRecordPayment = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (payAmount <= 0) return;
-    addPaymentRecord(currentLead.id, {
-      amount: Number(payAmount),
-      date: new Date().toISOString(),
-      paymentMethod: payMethod,
-      status: 'Paid',
-    });
-    alert(`Payment of $${payAmount} recorded! Receipt issued.`);
+    alert('12th Grade Document attached successfully!');
   };
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden bg-slate-950/70 backdrop-blur-sm flex justify-end">
       
       {/* LeadSquared 360 View Slide-Over Drawer */}
-      <div className="w-full max-w-2xl bg-white dark:bg-[#141F2E] border-l border-slate-200 dark:border-[#202D3D] h-full flex flex-col shadow-2xl animate-slideInRight text-slate-900 dark:text-white">
+      <div className="w-full max-w-2xl bg-white border-l border-slate-300 h-full flex flex-col shadow-2xl animate-slideInRight text-slate-900">
         
-        {/* LeadSquared Drawer Header (Deep Navy Header) */}
+        {/* Drawer Header */}
         <div className="p-5 bg-[#0F2537] text-white flex items-center justify-between shrink-0 shadow-md">
           <div className="flex items-center space-x-3.5">
-            <div className="h-12 w-12 rounded-2xl bg-[#FF6B00] flex items-center justify-center text-white text-xl font-black shadow-md">
+            <div className="h-12 w-12 rounded-2xl bg-[#2563EB] flex items-center justify-center text-white text-xl font-black shadow-md">
               {currentLead.name.charAt(0)}
             </div>
             <div>
@@ -122,7 +79,7 @@ export const DetailedProfileModal: React.FC<DetailedProfileModalProps> = ({ lead
                 <h2 className="text-lg font-extrabold text-white">{currentLead.name}</h2>
                 {currentLead.aiLeadScore && (
                   <span className="px-2 py-0.5 rounded text-[10px] font-mono font-black bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                    🔥 Lead Score: {currentLead.aiLeadScore}
+                    🔥 Intent: {currentLead.aiLeadScore}%
                   </span>
                 )}
                 {currentLead.enrolledStudentId && (
@@ -132,7 +89,7 @@ export const DetailedProfileModal: React.FC<DetailedProfileModalProps> = ({ lead
                 )}
               </div>
               <p className="text-xs text-slate-300 mt-0.5">
-                Lead ID: <span className="font-mono text-[#FF6B00] font-bold">{currentLead.id}</span> • Added {formatDateString(currentLead.dateAdded)}
+                Applicant ID: <span className="font-mono text-blue-400 font-bold">{currentLead.id}</span> • 12th Pass Candidate
               </p>
             </div>
           </div>
@@ -147,7 +104,7 @@ export const DetailedProfileModal: React.FC<DetailedProfileModalProps> = ({ lead
             </button>
             <button
               onClick={() => openMessageComposer(currentLead, 'whatsapp')}
-              className="px-3.5 py-2 bg-[#FF6B00] hover:bg-[#e05e00] text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center space-x-1"
+              className="px-3.5 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center space-x-1"
             >
               <IconMessageSquare className="w-3.5 h-3.5" />
               <span>WhatsApp</span>
@@ -161,40 +118,40 @@ export const DetailedProfileModal: React.FC<DetailedProfileModalProps> = ({ lead
           </div>
         </div>
 
-        {/* LeadSquared Drawer Navigation Bar */}
-        <div className="flex border-b border-slate-200 dark:border-[#202D3D] bg-slate-50 dark:bg-[#0B131E] px-4 text-xs font-bold shrink-0">
+        {/* Drawer Tabs */}
+        <div className="flex border-b border-slate-200 bg-slate-50 px-4 text-xs font-bold shrink-0">
           {(['overview', 'documents', 'schedule', 'payments'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`py-3 px-5 border-b-2 capitalize transition-all ${
                 activeTab === tab
-                  ? 'border-[#FF6B00] text-[#FF6B00] font-black'
-                  : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  ? 'border-blue-600 text-blue-600 font-black'
+                  : 'border-transparent text-slate-500 hover:text-slate-900'
               }`}
             >
               {tab === 'documents' ? `Documents (${(currentLead.documents || []).length})` : tab}
               {tab === 'schedule' && ` (${(currentLead.scheduledCalls || []).length})`}
-              {tab === 'payments' && ` ($${totalPaid})`}
+              {tab === 'payments' && ` (${(currentLead.payments || []).length})`}
             </button>
           ))}
         </div>
 
-        {/* Drawer Body Scroll Content */}
+        {/* Drawer Content */}
         <div className="p-5 flex-1 overflow-y-auto space-y-5">
           
           {activeTab === 'overview' && (
             <div className="space-y-5 text-xs">
               
-              {/* Pipeline Stage Selector Box */}
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#0B131E] border border-slate-200 dark:border-[#202D3D] space-y-3">
+              {/* Pipeline Stage Box */}
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 block mb-1">Lead Stage</label>
+                    <label className="text-[11px] font-bold text-slate-500 block mb-1">Admission Stage</label>
                     <select
                       value={currentLead.status}
                       onChange={(e) => updateLeadStatus(currentLead.id, e.target.value as LeadStatus)}
-                      className="w-full px-3 py-2 bg-white dark:bg-[#141F2E] border border-slate-300 dark:border-[#202D3D] rounded-xl text-xs font-bold text-[#FF6B00] focus:outline-none"
+                      className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs font-bold text-blue-600 focus:outline-none"
                     >
                       <option value="New">New</option>
                       <option value="Contacted">Contacted</option>
@@ -206,11 +163,11 @@ export const DetailedProfileModal: React.FC<DetailedProfileModalProps> = ({ lead
                     </select>
                   </div>
                   <div>
-                    <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 block mb-1">Assigned Telecaller</label>
+                    <label className="text-[11px] font-bold text-slate-500 block mb-1">Admissions Officer</label>
                     <select
                       value={currentLead.assignedCounsellorId || ''}
                       onChange={(e) => assignCounsellor(currentLead.id, e.target.value)}
-                      className="w-full px-3 py-2 bg-white dark:bg-[#141F2E] border border-slate-300 dark:border-[#202D3D] rounded-xl text-xs text-slate-800 dark:text-slate-200 font-bold"
+                      className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs text-slate-900 font-bold"
                     >
                       <option value="" disabled>Unassigned</option>
                       {counsellors.map((c) => (
@@ -223,60 +180,51 @@ export const DetailedProfileModal: React.FC<DetailedProfileModalProps> = ({ lead
                 {!currentLead.enrolledStudentId && (
                   <button
                     onClick={() => convertLeadToStudent(currentLead.id)}
-                    className="w-full py-2.5 bg-[#FF6B00] hover:bg-[#e05e00] text-white font-extrabold rounded-xl shadow-md transition-all text-xs"
+                    className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl shadow-md transition-all text-xs"
                   >
-                    Convert Lead to Enrolled Student
+                    Convert 12th Applicant to Enrolled College Student
                   </button>
                 )}
               </div>
 
-              {/* Lead Origin & Attribution */}
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#0B131E] border border-slate-200 dark:border-[#202D3D] space-y-2 text-xs">
-                <h3 className="font-bold text-slate-900 dark:text-white uppercase text-[11px] border-b border-slate-200 dark:border-[#202D3D] pb-2 flex items-center space-x-1.5">
-                  <IconTag className="w-3.5 h-3.5 text-[#FF6B00]" />
-                  <span>Lead 360° Channel Attribution</span>
+              {/* 12th Student Academic Profile */}
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 text-slate-700">
+                <h3 className="font-bold text-slate-900 uppercase text-[11px] border-b border-slate-200 pb-2 flex items-center space-x-1.5">
+                  <IconGraduationCap className="w-4 h-4 text-blue-600" />
+                  <span>Class 12th Academic Background</span>
                 </h3>
-                <div className="grid grid-cols-2 gap-2 pt-1 text-slate-600 dark:text-slate-300">
-                  <div><span className="text-slate-400">Traffic Source:</span> <span className="font-extrabold text-[#FF6B00]">{currentLead.source}</span></div>
-                  <div><span className="text-slate-400">Entry Form:</span> <span className="text-slate-900 dark:text-white font-semibold">{currentLead.entryPoint}</span></div>
-                  <div><span className="text-slate-400">utm_source:</span> <span className="font-mono text-slate-700 dark:text-slate-300">{currentLead.utmSource || 'website'}</span></div>
-                  <div><span className="text-slate-400">utm_campaign:</span> <span className="font-mono text-slate-700 dark:text-slate-300">{currentLead.utmCampaign || 'organic'}</span></div>
-                </div>
-              </div>
-
-              {/* Personal Details */}
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#0B131E] border border-slate-200 dark:border-[#202D3D] space-y-2 text-slate-600 dark:text-slate-300">
-                <h3 className="font-bold text-slate-900 dark:text-white uppercase text-[11px] border-b border-slate-200 dark:border-[#202D3D] pb-2">Student Profile</h3>
                 <div className="grid grid-cols-2 gap-2 pt-1">
-                  <div><span className="text-slate-400">Phone:</span> <strong className="text-slate-900 dark:text-white font-mono">{currentLead.phone}</strong></div>
-                  <div><span className="text-slate-400">Email:</span> <span className="text-slate-900 dark:text-white">{currentLead.email}</span></div>
-                  <div><span className="text-slate-400">City:</span> <span className="text-slate-900 dark:text-white">{currentLead.city}</span></div>
-                  <div><span className="text-slate-400">Qualification:</span> <span className="text-slate-900 dark:text-white">{currentLead.qualification}</span></div>
-                  <div className="col-span-2"><span className="text-slate-400">Target Course:</span> <span className="text-[#0066FF] font-bold">{currentLead.course}</span></div>
+                  <div><span className="text-slate-500">12th Stream:</span> <strong className="text-slate-900">{currentLead.qualification}</strong></div>
+                  <div><span className="text-slate-500">Board Marks %:</span> <strong className="text-emerald-700 font-mono">{currentLead.class12Percentage || 88.5}%</strong></div>
+                  <div><span className="text-slate-500">Phone:</span> <strong className="text-slate-900 font-mono">{currentLead.phone}</strong></div>
+                  <div><span className="text-slate-500">Email:</span> <span className="text-slate-900">{currentLead.email}</span></div>
+                  <div><span className="text-slate-500">City:</span> <span className="text-slate-900">{currentLead.city}</span></div>
+                  <div><span className="text-slate-500">Passing Year:</span> <span className="text-slate-900">{currentLead.graduationYear || '2026'}</span></div>
+                  <div className="col-span-2"><span className="text-slate-500">Target College Degree:</span> <span className="text-blue-700 font-extrabold">{currentLead.course}</span></div>
                 </div>
               </div>
 
-              {/* Remarks & History */}
+              {/* Remarks */}
               <div className="space-y-3">
                 <form onSubmit={handleAddNote} className="flex gap-2">
                   <input
                     type="text"
                     value={newNoteText}
                     onChange={(e) => setNewNoteText(e.target.value)}
-                    placeholder="Log LeadSquared activity notes or remarks..."
-                    className="flex-1 px-3 py-2 bg-slate-50 dark:bg-[#0B131E] border border-slate-300 dark:border-[#202D3D] rounded-xl text-slate-900 dark:text-white focus:outline-none font-medium"
+                    placeholder="Log counselor notes or 12th board transcript remarks..."
+                    className="flex-1 px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none font-medium"
                   />
-                  <button type="submit" className="px-4 py-2 bg-[#FF6B00] text-white font-bold rounded-xl text-xs">Add Note</button>
+                  <button type="submit" className="px-4 py-2 bg-blue-600 text-white font-bold rounded-xl text-xs">Add Note</button>
                 </form>
 
                 <div className="space-y-2 max-h-60 overflow-y-auto">
                   {(currentLead.activityHistory || []).map((act) => (
-                    <div key={act.id} className="p-3 rounded-xl bg-slate-50 dark:bg-[#0B131E] border border-slate-200 dark:border-[#202D3D] text-[11px] space-y-0.5">
-                      <div className="flex justify-between font-bold text-[#FF6B00]">
+                    <div key={act.id} className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-[11px] space-y-0.5">
+                      <div className="flex justify-between font-bold text-blue-700">
                         <span>{act.author}</span>
                         <span className="text-slate-400 font-normal">{formatDateString(act.timestamp)}</span>
                       </div>
-                      <p className="text-slate-700 dark:text-slate-300">{act.message}</p>
+                      <p className="text-slate-800">{act.message}</p>
                     </div>
                   ))}
                 </div>
@@ -289,33 +237,14 @@ export const DetailedProfileModal: React.FC<DetailedProfileModalProps> = ({ lead
             <div className="space-y-4 text-xs">
               <div className="grid grid-cols-1 gap-3">
                 {(currentLead.documents || []).map((doc) => (
-                  <div key={doc.id} className="p-4 rounded-2xl bg-slate-50 dark:bg-[#0B131E] border border-slate-200 dark:border-[#202D3D] space-y-2">
-                    <div className="flex justify-between font-bold text-slate-900 dark:text-white">
+                  <div key={doc.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                    <div className="flex justify-between font-bold text-slate-900">
                       <span>{doc.title}</span>
-                      <span className="text-[#FF6B00] font-mono text-[11px]">{doc.status}</span>
+                      <span className="text-blue-600 font-mono text-[11px]">{doc.status}</span>
                     </div>
-                    {doc.abstractText && <p className="text-slate-500 italic text-[11px]">"{doc.abstractText}"</p>}
+                    <div className="text-xs text-slate-600">{doc.fileName} • {doc.fileSize}</div>
                   </div>
                 ))}
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'payments' && (
-            <div className="space-y-4 text-xs">
-              <div className="grid grid-cols-3 gap-2 text-center">
-                <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#0B131E] border border-slate-200 dark:border-[#202D3D]">
-                  <div className="text-[10px] text-slate-400 uppercase font-bold">Total Fee</div>
-                  <div className="text-base font-bold text-slate-900 dark:text-white">${totalFee}</div>
-                </div>
-                <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#0B131E] border border-slate-200 dark:border-[#202D3D]">
-                  <div className="text-[10px] text-emerald-600 dark:text-emerald-400 uppercase font-bold">Paid</div>
-                  <div className="text-base font-bold text-emerald-600 dark:text-emerald-400">${totalPaid}</div>
-                </div>
-                <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#0B131E] border border-slate-200 dark:border-[#202D3D]">
-                  <div className="text-[10px] text-amber-600 dark:text-amber-400 uppercase font-bold">Balance</div>
-                  <div className="text-base font-bold text-amber-600 dark:text-amber-400">${balanceDue}</div>
-                </div>
               </div>
             </div>
           )}

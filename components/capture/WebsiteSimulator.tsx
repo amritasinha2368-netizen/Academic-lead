@@ -7,7 +7,7 @@ import { PreferredBatch, Qualification } from '@/lib/types';
 import { IconSparkles, IconCheckCircle, IconSend, IconGlobe } from '@/components/ui/Icons';
 
 export const WebsiteSimulator: React.FC = () => {
-  const { addLeadFromWebsite, setActiveView } = useLeadStore();
+  const { addLeadFromWebsite } = useLeadStore();
 
   const [simChannel, setSimChannel] = useState<'Google Ads' | 'Instagram' | 'Homepage' | 'Referral' | 'Walk-in'>('Instagram');
 
@@ -15,8 +15,9 @@ export const WebsiteSimulator: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [course, setCourse] = useState(COURSES[0]);
-  const [qualification, setQualification] = useState<Qualification>('Undergraduate');
-  const [batch, setBatch] = useState<PreferredBatch>('Morning (9 AM - 12 PM)');
+  const [qualification, setQualification] = useState<Qualification>('12th Science (PCM)');
+  const [class12Percentage, setClass12Percentage] = useState<number>(88);
+  const [batch, setBatch] = useState<PreferredBatch>('Regular Morning College Batch');
   const [city, setCity] = useState('San Francisco');
 
   const [submitted, setSubmitted] = useState(false);
@@ -31,11 +32,14 @@ export const WebsiteSimulator: React.FC = () => {
       email,
       course,
       qualification,
+      class12Percentage: Number(class12Percentage),
       preferredBatch: batch,
+      graduationYear: '2026 12th Pass',
+      workExperience: 'Fresh 12th Graduate',
       city,
       source: simChannel,
       utmSource: simChannel.toLowerCase().replace(/\s+/g, '_'),
-      entryPoint: 'Enroll Form',
+      entryPoint: '12th College Application Form',
     });
 
     setSubmitted(true);
@@ -57,11 +61,11 @@ export const WebsiteSimulator: React.FC = () => {
           </div>
           <div>
             <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-blue-100 text-blue-900 border border-blue-300">
-              Live Channel Attribution Sandbox
+              Class 12th College Admissions Portal Simulator
             </span>
-            <h1 className="text-2xl font-black text-slate-900 mt-1">Website Enquiry Simulator</h1>
+            <h1 className="text-2xl font-black text-slate-900 mt-1">12th Pass Student Application Simulator</h1>
             <p className="text-sm font-bold text-slate-600 mt-0.5">
-              Simulate student lead submissions from Instagram Ads, Google Ads, or Direct Website visits in real time.
+              Simulate high school 12th pass students applying for Undergraduate Degree admissions (B.Tech, BBA, BCA).
             </p>
           </div>
         </div>
@@ -98,12 +102,12 @@ export const WebsiteSimulator: React.FC = () => {
         <div className="lg:col-span-2 ls-card p-6 bg-white space-y-5">
           <div className="border-b border-slate-300 pb-3 flex items-center justify-between">
             <h2 className="text-base font-black text-slate-900">
-              Simulated Student Registration Form ({simChannel})
+              Simulated 12th Pass Application Form ({simChannel})
             </h2>
             {submitted && (
               <span className="px-3 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-900 border border-emerald-300 flex items-center space-x-1">
                 <IconCheckCircle className="w-4 h-4" />
-                <span>Captured & Auto-Ack Sent!</span>
+                <span>Submitted & Auto-Ack Prospectus Dispatched!</span>
               </span>
             )}
           </div>
@@ -117,18 +121,18 @@ export const WebsiteSimulator: React.FC = () => {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Sophia Martinez"
+                  placeholder="e.g. Rohan Mehta"
                   className="w-full p-3 bg-slate-100 border border-slate-300 rounded-xl text-slate-900 font-bold focus:outline-none focus:border-blue-600"
                 />
               </div>
               <div>
-                <label className="block text-xs font-black text-slate-600 mb-1">Phone Number *</label>
+                <label className="block text-xs font-black text-slate-600 mb-1">Student Mobile Number *</label>
                 <input
                   type="tel"
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+1 (555) 987-6543"
+                  placeholder="+1 (555) 912-3456"
                   className="w-full p-3 bg-slate-100 border border-slate-300 rounded-xl text-slate-900 font-mono font-bold focus:outline-none focus:border-blue-600"
                 />
               </div>
@@ -142,12 +146,12 @@ export const WebsiteSimulator: React.FC = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="sophia@example.com"
+                  placeholder="student@example.com"
                   className="w-full p-3 bg-slate-100 border border-slate-300 rounded-xl text-slate-900 font-bold focus:outline-none focus:border-blue-600"
                 />
               </div>
               <div>
-                <label className="block text-xs font-black text-slate-600 mb-1">Current City</label>
+                <label className="block text-xs font-black text-slate-600 mb-1">City</label>
                 <input
                   type="text"
                   value={city}
@@ -158,8 +162,39 @@ export const WebsiteSimulator: React.FC = () => {
               </div>
             </div>
 
+            {/* 12th Stream & Percentage */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-black text-slate-600 mb-1">12th Grade Stream *</label>
+                <select
+                  value={qualification}
+                  onChange={(e) => setQualification(e.target.value as Qualification)}
+                  className="w-full p-3 bg-slate-100 border border-slate-300 rounded-xl text-slate-900 font-bold focus:outline-none focus:border-blue-600"
+                >
+                  <option value="12th Science (PCM)">12th Science (PCM)</option>
+                  <option value="12th Science (PCB)">12th Science (PCB)</option>
+                  <option value="12th Commerce">12th Commerce</option>
+                  <option value="12th Arts / Humanities">12th Arts / Humanities</option>
+                  <option value="12th Pass (Awaiting Result)">12th Pass (Awaiting Result)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-black text-slate-600 mb-1">12th Board Score (%)</label>
+                <input
+                  type="number"
+                  min="35"
+                  max="100"
+                  value={class12Percentage}
+                  onChange={(e) => setClass12Percentage(Number(e.target.value))}
+                  placeholder="88.5"
+                  className="w-full p-3 bg-slate-100 border border-slate-300 rounded-xl text-slate-900 font-mono font-bold focus:outline-none focus:border-blue-600"
+                />
+              </div>
+            </div>
+
             <div>
-              <label className="block text-xs font-black text-slate-600 mb-1">Course Program Interested In</label>
+              <label className="block text-xs font-black text-slate-600 mb-1">Target College Degree Program *</label>
               <select
                 value={course}
                 onChange={(e) => setCourse(e.target.value)}
@@ -176,7 +211,7 @@ export const WebsiteSimulator: React.FC = () => {
               className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-xl shadow-md transition-all flex items-center justify-center space-x-2 text-sm"
             >
               <IconSend className="w-5 h-5" />
-              <span>Submit Student Enquiry ({simChannel})</span>
+              <span>Submit 12th College Application ({simChannel})</span>
             </button>
           </form>
         </div>
