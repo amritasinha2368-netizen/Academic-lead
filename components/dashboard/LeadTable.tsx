@@ -114,14 +114,14 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
         <table className="w-full text-left text-xs text-slate-900 whitespace-nowrap">
           
           {/* Table Header */}
-          <thead className="bg-slate-100 text-[11px] font-extrabold text-slate-700 uppercase tracking-wider border-b border-slate-300">
+          <thead className="bg-slate-100 text-xs font-extrabold text-slate-800 uppercase tracking-wider border-b border-slate-300">
             <tr>
               <th scope="col" className="p-3.5 w-10 text-center">
                 <input
                   type="checkbox"
                   checked={allVisibleSelected}
                   onChange={toggleSelectAll}
-                  className="rounded border-slate-400 bg-white text-blue-600 focus:ring-blue-500 h-3.5 w-3.5 cursor-pointer"
+                  className="rounded border-slate-400 bg-white text-blue-600 focus:ring-blue-500 h-4 w-4 cursor-pointer"
                 />
               </th>
               <th scope="col" className="py-3.5 px-4 min-w-[280px]">Student / Contact</th>
@@ -134,7 +134,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
             </tr>
           </thead>
 
-          {/* Table Body (Single-Line Alignment) */}
+          {/* Table Body (Increased Readability Font) */}
           <tbody className="divide-y divide-slate-200 bg-white">
             {paginatedLeads.length === 0 ? (
               <tr>
@@ -164,7 +164,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => toggleSelectLead(lead.id)}
-                        className="rounded border-slate-400 bg-white text-blue-600 focus:ring-blue-500 h-3.5 w-3.5 cursor-pointer"
+                        className="rounded border-slate-400 bg-white text-blue-600 focus:ring-blue-500 h-4 w-4 cursor-pointer"
                       />
                     </td>
 
@@ -184,13 +184,13 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
                             </span>
 
                             {lead.aiLeadScore && (
-                              <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                              <span className="px-1.5 py-0.5 rounded text-[11px] font-mono font-extrabold bg-amber-100 text-amber-900 border border-amber-300">
                                 🔥 {lead.aiLeadScore}
                               </span>
                             )}
                           </div>
 
-                          <div className="flex items-center space-x-2 text-[11px] text-slate-600 mt-0.5 font-semibold whitespace-nowrap">
+                          <div className="flex items-center space-x-2 text-xs text-slate-600 mt-0.5 font-bold whitespace-nowrap">
                             <span className="font-mono">{lead.phone}</span>
                             <span>•</span>
                             <span>{lead.city}</span>
@@ -199,12 +199,12 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
                       </div>
                     </td>
 
-                    {/* Course Name (NO TRUNCATION / NO DOT DOT DOT) */}
+                    {/* Course Name */}
                     <td className="py-3.5 px-4">
                       <div className="font-extrabold text-slate-900 text-xs whitespace-nowrap">
                         {lead.course}
                       </div>
-                      <div className="text-[11px] text-slate-600 font-semibold mt-0.5 whitespace-nowrap">
+                      <div className="text-xs text-slate-600 font-bold mt-0.5 whitespace-nowrap">
                         {lead.qualification}
                       </div>
                     </td>
@@ -214,7 +214,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
                       <select
                         value={lead.status}
                         onChange={(e) => updateLeadStatus(lead.id, e.target.value as LeadStatus)}
-                        className={`text-[11px] font-bold px-2.5 py-1 rounded-lg border focus:outline-none transition-all cursor-pointer whitespace-nowrap ${getStatusBadgeStyle(lead.status)}`}
+                        className={`text-xs font-bold px-2.5 py-1 rounded-lg border focus:outline-none transition-all cursor-pointer whitespace-nowrap ${getStatusBadgeStyle(lead.status)}`}
                       >
                         <option value="New">New</option>
                         <option value="Contacted">Contacted</option>
@@ -239,7 +239,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
                             <img
                               src={assignedCounsellor.avatar}
                               alt={assignedCounsellor.name}
-                              className="w-5 h-5 rounded-full object-cover border border-slate-300 shrink-0"
+                              className="w-5.5 h-5.5 rounded-full object-cover border border-slate-300 shrink-0"
                             />
                             <select
                               value={lead.assignedCounsellorId || ''}
@@ -260,7 +260,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
                     </td>
 
                     {/* Date Added */}
-                    <td className="py-3.5 px-4 text-[11px] text-slate-600 font-mono font-bold whitespace-nowrap">
+                    <td className="py-3.5 px-4 text-xs text-slate-600 font-mono font-bold whitespace-nowrap">
                       {formatDateString(lead.dateAdded)}
                     </td>
 
@@ -272,21 +272,21 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
                           className="p-1.5 text-emerald-700 hover:bg-emerald-100 rounded-lg transition-colors"
                           title="Call Softphone"
                         >
-                          <IconPhone className="w-3.5 h-3.5" />
+                          <IconPhone className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => openMessageComposer(lead, 'whatsapp')}
                           className="p-1.5 text-blue-700 hover:bg-blue-100 rounded-lg transition-colors"
                           title="Send WhatsApp"
                         >
-                          <IconMessageSquare className="w-3.5 h-3.5" />
+                          <IconMessageSquare className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => onSelectLeadDetail(lead)}
                           className="p-1.5 text-slate-700 hover:bg-slate-200 rounded-lg transition-colors"
                           title="View 360° Profile"
                         >
-                          <IconEye className="w-3.5 h-3.5" />
+                          <IconEye className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => {
@@ -295,7 +295,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
                           className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg transition-colors"
                           title="Delete"
                         >
-                          <IconTrash className="w-3.5 h-3.5" />
+                          <IconTrash className="w-4 h-4" />
                         </button>
                       </div>
                     </td>
