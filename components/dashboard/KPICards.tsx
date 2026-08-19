@@ -17,7 +17,7 @@ export const KPICards: React.FC = () => {
   const newLeads = leads.filter((l) => l.status === 'New').length;
   const followUps = leads.filter((l) => l.status === 'Follow-up' || l.status === 'Contacted' || l.status === 'Counselling').length;
   const enrolled = leads.filter((l) => l.status === 'Enrolled').length;
-  const duplicates = leads.filter((l) => l.isDuplicate).length;
+  const highIntent = leads.filter((l) => (l.aiLeadScore || 0) >= 80).length;
 
   const conversionRate = total > 0 ? Math.round((enrolled / total) * 100) : 0;
 
@@ -25,64 +25,60 @@ export const KPICards: React.FC = () => {
     {
       title: 'Total Enquiries',
       value: total,
-      subtext: 'Active Lead Pool',
+      subtext: 'Active Lead Database',
       icon: IconUsers,
-      color: 'text-indigo-600 dark:text-indigo-400',
-      bgColor: 'bg-indigo-50 dark:bg-indigo-500/10',
+      accentColor: 'text-[#0066FF]',
+      badgeBg: 'bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400',
     },
     {
       title: 'New Incoming',
       value: newLeads,
-      subtext: `${newLeads} Action Required`,
+      subtext: 'Unassigned / New Queue',
       icon: IconUserPlus,
-      color: 'text-sky-600 dark:text-sky-400',
-      bgColor: 'bg-sky-50 dark:bg-sky-500/10',
+      accentColor: 'text-[#FF6B00]',
+      badgeBg: 'bg-orange-50 dark:bg-orange-500/10 text-orange-700 dark:text-orange-400',
     },
     {
-      title: 'Active Follow-Ups',
-      value: followUps,
-      subtext: 'In Pipeline',
+      title: 'High Intent Leads',
+      value: highIntent,
+      subtext: 'Score ≥ 80% 🔥',
       icon: IconPhone,
-      color: 'text-amber-600 dark:text-amber-400',
-      bgColor: 'bg-amber-50 dark:bg-amber-500/10',
+      accentColor: 'text-amber-600 dark:text-amber-400',
+      badgeBg: 'bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400',
     },
     {
       title: 'Students Enrolled',
       value: enrolled,
-      subtext: `${conversionRate}% Conversion Rate`,
+      subtext: `${conversionRate}% Admissions Conversion`,
       icon: IconGraduationCap,
-      color: 'text-emerald-600 dark:text-emerald-400',
-      bgColor: 'bg-emerald-50 dark:bg-emerald-500/10',
-    },
-    {
-      title: 'Duplicates Flagged',
-      value: duplicates,
-      subtext: `${duplicates} Reviewed`,
-      icon: IconAlertTriangle,
-      color: 'text-rose-600 dark:text-rose-400',
-      bgColor: 'bg-rose-50 dark:bg-rose-500/10',
+      accentColor: 'text-emerald-600 dark:text-emerald-400',
+      badgeBg: 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400',
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {CARDS.map((card) => {
         const IconComponent = card.icon;
         return (
           <div
             key={card.title}
-            className="clean-surface p-4 flex flex-col justify-between space-y-3 transition-all hover:-translate-y-0.5"
+            className="ls-card p-5 flex items-center justify-between transition-all hover:shadow-md"
           >
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{card.title}</span>
-              <div className={`p-2 rounded-xl ${card.bgColor} ${card.color}`}>
-                <IconComponent className="w-4 h-4" />
+            <div>
+              <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
+                {card.title}
+              </span>
+              <div className="text-2xl font-black text-slate-900 dark:text-white mt-1 font-mono tracking-tight">
+                {card.value}
+              </div>
+              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">
+                {card.subtext}
               </div>
             </div>
 
-            <div>
-              <div className="text-2xl font-black text-slate-900 dark:text-white font-mono tracking-tight">{card.value}</div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 font-medium">{card.subtext}</div>
+            <div className={`p-3 rounded-2xl ${card.badgeBg}`}>
+              <IconComponent className="w-6 h-6" />
             </div>
           </div>
         );

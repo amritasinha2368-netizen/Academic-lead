@@ -15,7 +15,8 @@ import {
   IconGoogle,
   IconGlobe,
   IconSparkles,
-  IconFileText
+  IconFileText,
+  IconMessageSquare
 } from '@/components/ui/Icons';
 
 interface LeadTableProps {
@@ -31,7 +32,9 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
     toggleSelectAll, 
     updateLeadStatus, 
     assignCounsellor,
-    deleteLead
+    deleteLead,
+    openDialer,
+    openMessageComposer
   } = useLeadStore();
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -48,9 +51,9 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
   const getStatusBadgeStyle = (status: LeadStatus) => {
     switch (status) {
       case 'New':
-        return 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border-indigo-200 dark:border-indigo-500/30';
-      case 'Contacted':
         return 'bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-500/30';
+      case 'Contacted':
+        return 'bg-[#FFF3EB] dark:bg-orange-500/10 text-[#FF6B00] dark:text-orange-400 border-[#FFE0CC] dark:border-orange-500/30';
       case 'Follow-up':
         return 'bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-500/30';
       case 'Interested':
@@ -97,52 +100,44 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
         </span>
       );
     }
-    if (source.includes('Chatbot')) {
-      return (
-        <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-purple-50 dark:bg-purple-500/10 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-500/30">
-          <IconSparkles className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400 shrink-0" />
-          <span>AI Chatbot</span>
-        </span>
-      );
-    }
     return (
-      <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30">
-        <IconTag className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+      <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+        <IconTag className="w-3.5 h-3.5 shrink-0" />
         <span>{source}</span>
       </span>
     );
   };
 
   return (
-    <div className="clean-surface overflow-hidden">
+    <div className="ls-card overflow-hidden">
       
       {/* Scrollable Table Wrapper */}
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs text-slate-700 dark:text-slate-300">
           
-          {/* Table Header */}
-          <thead className="bg-slate-50 dark:bg-slate-900/80 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+          {/* Table Header (LeadSquared Blue-Gray Header) */}
+          <thead className="bg-slate-100 dark:bg-[#182638] text-[11px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
             <tr>
               <th scope="col" className="p-3.5 w-10 text-center">
                 <input
                   type="checkbox"
                   checked={allVisibleSelected}
                   onChange={toggleSelectAll}
-                  className="rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-indigo-600 focus:ring-indigo-500 h-4 w-4 cursor-pointer"
+                  className="rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-[#FF6B00] focus:ring-[#FF6B00] h-4 w-4 cursor-pointer"
                 />
               </th>
-              <th scope="col" className="py-3.5 px-4 min-w-[200px]">Student / Contact</th>
-              <th scope="col" className="py-3.5 px-4 min-w-[190px]">Course Program</th>
+              <th scope="col" className="py-3.5 px-4 min-w-[210px]">Lead Name & Score</th>
+              <th scope="col" className="py-3.5 px-4 min-w-[190px]">Target Course Program</th>
               <th scope="col" className="py-3.5 px-4 min-w-[130px]">Pipeline Stage</th>
-              <th scope="col" className="py-3.5 px-4 min-w-[150px]">Lead Channel / Origin</th>
+              <th scope="col" className="py-3.5 px-4 min-w-[150px]">Lead Channel / Source</th>
               <th scope="col" className="py-3.5 px-4 min-w-[150px]">Assigned Counsellor</th>
-              <th scope="col" className="py-3.5 px-4 min-w-[120px]">Enquiry Date</th>
-              <th scope="col" className="py-3.5 px-4 text-right min-w-[90px]">Actions</th>
+              <th scope="col" className="py-3.5 px-4 min-w-[120px]">Created Date</th>
+              <th scope="col" className="py-3.5 px-4 text-right min-w-[120px]">LeadSquared Actions</th>
             </tr>
           </thead>
 
           {/* Table Body */}
-          <tbody className="divide-y divide-slate-200 dark:divide-slate-800/50 bg-white dark:bg-slate-950/20">
+          <tbody className="divide-y divide-slate-200 dark:divide-slate-800/60 bg-white dark:bg-slate-900/30">
             {paginatedLeads.length === 0 ? (
               <tr>
                 <td colSpan={8} className="py-12 text-center text-slate-400">
@@ -160,8 +155,8 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
                 return (
                   <tr
                     key={lead.id}
-                    className={`hover:bg-slate-50 dark:hover:bg-slate-900/60 transition-colors ${
-                      isSelected ? 'bg-indigo-50/50 dark:bg-indigo-950/20' : ''
+                    className={`hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors ${
+                      isSelected ? 'bg-orange-50/50 dark:bg-orange-950/20' : ''
                     }`}
                   >
                     
@@ -171,37 +166,34 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => toggleSelectLead(lead.id)}
-                        className="rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-indigo-600 focus:ring-indigo-500 h-4 w-4 cursor-pointer"
+                        className="rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-[#FF6B00] focus:ring-[#FF6B00] h-4 w-4 cursor-pointer"
                       />
                     </td>
 
-                    {/* Student Name & Contact */}
+                    {/* Lead Name & Score */}
                     <td className="py-3.5 px-4">
-                      <div className="flex items-center space-x-2.5">
-                        <div className="h-8 w-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-800 dark:text-slate-200 font-bold text-xs shrink-0 border border-slate-200 dark:border-slate-700">
+                      <div className="flex items-center space-x-3">
+                        <div className="h-9 w-9 rounded-xl bg-[#0F2537] text-white font-black text-xs flex items-center justify-center shrink-0 shadow-sm">
                           {lead.name.charAt(0)}
                         </div>
                         <div>
-                          <div className="flex items-center space-x-1.5">
+                          <div className="flex items-center space-x-2">
                             <span 
                               onClick={() => onSelectLeadDetail(lead)}
-                              className="font-bold text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer transition-colors text-xs"
+                              className="font-extrabold text-slate-900 dark:text-white hover:text-[#FF6B00] dark:hover:text-[#FF6B00] cursor-pointer transition-colors text-xs"
                             >
                               {lead.name}
                             </span>
 
-                            {lead.isDuplicate && (
-                              <span 
-                                onClick={() => onSelectLeadDetail(lead)}
-                                className="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-500/30 cursor-pointer"
-                              >
-                                DUP
+                            {lead.aiLeadScore && (
+                              <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-black bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-500/30">
+                                🔥 {lead.aiLeadScore}
                               </span>
                             )}
                           </div>
 
-                          <div className="flex items-center space-x-2 text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                            <span>{lead.phone}</span>
+                          <div className="flex items-center space-x-2 text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 font-medium">
+                            <span className="font-mono">{lead.phone}</span>
                             <span>•</span>
                             <span>{lead.city}</span>
                           </div>
@@ -211,10 +203,10 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
 
                     {/* Course */}
                     <td className="py-3.5 px-4">
-                      <div className="font-semibold text-slate-900 dark:text-slate-200 text-xs truncate max-w-[180px]" title={lead.course}>
+                      <div className="font-bold text-slate-900 dark:text-slate-200 text-xs truncate max-w-[180px]" title={lead.course}>
                         {lead.course}
                       </div>
-                      <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
                         {lead.qualification}
                       </div>
                     </td>
@@ -224,7 +216,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
                       <select
                         value={lead.status}
                         onChange={(e) => updateLeadStatus(lead.id, e.target.value as LeadStatus)}
-                        className={`text-[11px] font-semibold px-2.5 py-1 rounded-lg border focus:outline-none transition-all cursor-pointer ${getStatusBadgeStyle(lead.status)}`}
+                        className={`text-[11px] font-extrabold px-2.5 py-1 rounded-lg border focus:outline-none transition-all cursor-pointer ${getStatusBadgeStyle(lead.status)}`}
                       >
                         <option value="New">New</option>
                         <option value="Contacted">Contacted</option>
@@ -254,17 +246,17 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
                             <select
                               value={lead.assignedCounsellorId || ''}
                               onChange={(e) => assignCounsellor(lead.id, e.target.value)}
-                              className="bg-transparent text-xs text-slate-700 dark:text-slate-300 font-medium focus:outline-none cursor-pointer"
+                              className="bg-transparent text-xs text-slate-700 dark:text-slate-300 font-bold focus:outline-none cursor-pointer"
                             >
                               {counsellors.map((c) => (
-                                <option key={c.id} value={c.id} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-200">
+                                <option key={c.id} value={c.id} className="bg-white dark:bg-[#0F2537] text-slate-900 dark:text-white">
                                   {c.name}
                                 </option>
                               ))}
                             </select>
                           </>
                         ) : (
-                          <span className="text-slate-400 text-xs">Unassigned</span>
+                          <span className="text-slate-400 text-xs font-medium">Unassigned</span>
                         )}
                       </div>
                     </td>
@@ -274,13 +266,27 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
                       {formatDateString(lead.dateAdded)}
                     </td>
 
-                    {/* Actions */}
+                    {/* LeadSquared Actions */}
                     <td className="py-3.5 px-4 text-right">
-                      <div className="flex items-center justify-end space-x-1">
+                      <div className="flex items-center justify-end space-x-1.5">
+                        <button
+                          onClick={() => openDialer(lead)}
+                          className="p-1.5 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 rounded-lg transition-colors"
+                          title="Call Softphone"
+                        >
+                          <IconPhone className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => openMessageComposer(lead, 'whatsapp')}
+                          className="p-1.5 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 rounded-lg transition-colors"
+                          title="Send WhatsApp"
+                        >
+                          <IconMessageSquare className="w-4 h-4" />
+                        </button>
                         <button
                           onClick={() => onSelectLeadDetail(lead)}
-                          className="p-1 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded transition-colors"
-                          title="View Profile Details"
+                          className="p-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                          title="Lead 360° View"
                         >
                           <IconEye className="w-4 h-4" />
                         </button>
@@ -288,7 +294,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
                           onClick={() => {
                             if (confirm(`Delete lead "${lead.name}"?`)) deleteLead(lead.id);
                           }}
-                          className="p-1 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 rounded transition-colors"
+                          className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg transition-colors"
                           title="Delete"
                         >
                           <IconTrash className="w-4 h-4" />
@@ -305,30 +311,30 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
         </table>
       </div>
 
-      {/* Pagination Footer */}
-      <div className="bg-slate-50 dark:bg-slate-900/60 px-4 py-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+      {/* LeadSquared Pagination Footer */}
+      <div className="bg-slate-100 dark:bg-[#101A28] px-5 py-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 font-medium">
         <div>
-          Showing <span className="font-bold text-slate-800 dark:text-slate-200">{leads.length > 0 ? startIndex + 1 : 0}</span> to{' '}
-          <span className="font-bold text-slate-800 dark:text-slate-200">{Math.min(startIndex + itemsPerPage, leads.length)}</span> of{' '}
-          <span className="font-bold text-slate-800 dark:text-slate-200">{leads.length}</span> entries
+          Showing <span className="font-bold text-slate-900 dark:text-white">{leads.length > 0 ? startIndex + 1 : 0}</span> to{' '}
+          <span className="font-bold text-slate-900 dark:text-white">{Math.min(startIndex + itemsPerPage, leads.length)}</span> of{' '}
+          <span className="font-bold text-slate-900 dark:text-white">{leads.length}</span> entries
         </div>
 
         {totalPages > 1 && (
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-1.5">
             <button
               onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
               disabled={currentPage === 1}
-              className="px-2.5 py-1 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded border border-slate-200 dark:border-slate-700 disabled:opacity-40 hover:bg-slate-100 dark:hover:bg-slate-700 text-xs"
+              className="px-3 py-1 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg border border-slate-300 dark:border-slate-700 disabled:opacity-40 hover:bg-slate-50 font-bold text-xs"
             >
               Prev
             </button>
-            <span className="px-2 font-medium text-slate-700 dark:text-slate-300 text-xs">
+            <span className="px-2 font-bold text-slate-700 dark:text-slate-300 text-xs">
               Page {currentPage} of {totalPages}
             </span>
             <button
               onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
               disabled={currentPage === totalPages}
-              className="px-2.5 py-1 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded border border-slate-200 dark:border-slate-700 disabled:opacity-40 hover:bg-slate-100 dark:hover:bg-slate-700 text-xs"
+              className="px-3 py-1 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg border border-slate-300 dark:border-slate-700 disabled:opacity-40 hover:bg-slate-50 font-bold text-xs"
             >
               Next
             </button>
