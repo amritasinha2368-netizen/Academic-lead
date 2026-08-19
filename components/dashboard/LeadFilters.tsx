@@ -4,7 +4,7 @@ import React from 'react';
 import { useLeadStore } from '@/lib/lead-store';
 import { COURSES } from '@/lib/mock-data';
 import { LeadStatus, LeadSource } from '@/lib/types';
-import { IconSearch, IconFilter, IconAlertTriangle } from '@/components/ui/Icons';
+import { IconSearch } from '@/components/ui/Icons';
 
 export const LeadFilters: React.FC = () => {
   const { filters, setFilters, counsellors, resetFilters } = useLeadStore();
@@ -35,30 +35,30 @@ export const LeadFilters: React.FC = () => {
   ];
 
   return (
-    <div className="ls-card p-4 space-y-3">
+    <div className="ls-card p-5 space-y-4">
       
       {/* Search & Filters Container */}
       <div className="flex flex-col sm:flex-row items-center gap-3">
         
-        {/* Search Bar */}
+        {/* Search Input (14px Font) */}
         <div className="relative flex-1 w-full">
-          <IconSearch className="w-4 h-4 text-slate-400 absolute left-3.5 top-2.5" />
+          <IconSearch className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
           <input
             type="text"
             value={filters.searchQuery}
             onChange={(e) => setFilters((prev) => ({ ...prev, searchQuery: e.target.value }))}
-            placeholder="Filter leads by student name, phone number, email, or city..."
-            className="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-[#0B131E] border border-slate-200 dark:border-[#202D3D] rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#FF6B00] transition-colors font-medium"
+            placeholder="Search by student name, phone number, email, or city..."
+            className="w-full pl-10 pr-4 py-2.5 bg-slate-100 border border-slate-300 rounded-xl text-sm text-slate-900 placeholder-slate-500 focus:outline-none focus:border-blue-600 font-bold"
           />
         </div>
 
-        {/* Filter Selectors */}
-        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+        {/* Filter Selectors (14px Font) */}
+        <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
           
           <select
             value={filters.status}
             onChange={(e) => setFilters((prev) => ({ ...prev, status: e.target.value as any }))}
-            className="px-3 py-2 bg-slate-100 dark:bg-[#0B131E] border border-slate-200 dark:border-[#202D3D] rounded-xl text-xs text-slate-800 dark:text-slate-200 font-bold focus:outline-none focus:border-[#FF6B00]"
+            className="px-3.5 py-2.5 bg-slate-100 border border-slate-300 rounded-xl text-sm text-slate-900 font-extrabold focus:outline-none focus:border-blue-600"
           >
             <option value="All">All Lead Stages</option>
             {STATUSES.map((s) => (
@@ -69,9 +69,9 @@ export const LeadFilters: React.FC = () => {
           <select
             value={filters.course}
             onChange={(e) => setFilters((prev) => ({ ...prev, course: e.target.value }))}
-            className="px-3 py-2 bg-slate-100 dark:bg-[#0B131E] border border-slate-200 dark:border-[#202D3D] rounded-xl text-xs text-slate-800 dark:text-slate-200 font-bold focus:outline-none focus:border-[#FF6B00]"
+            className="px-3.5 py-2.5 bg-slate-100 border border-slate-300 rounded-xl text-sm text-slate-900 font-extrabold focus:outline-none focus:border-blue-600"
           >
-            <option value="All">All Target Courses</option>
+            <option value="All">All Courses</option>
             {COURSES.map((c) => (
               <option key={c} value={c}>{c}</option>
             ))}
@@ -80,7 +80,7 @@ export const LeadFilters: React.FC = () => {
           <select
             value={filters.source}
             onChange={(e) => setFilters((prev) => ({ ...prev, source: e.target.value as any }))}
-            className="px-3 py-2 bg-slate-100 dark:bg-[#0B131E] border border-slate-200 dark:border-[#202D3D] rounded-xl text-xs text-slate-800 dark:text-slate-200 font-bold focus:outline-none focus:border-[#FF6B00]"
+            className="px-3.5 py-2.5 bg-slate-100 border border-slate-300 rounded-xl text-sm text-slate-900 font-extrabold focus:outline-none focus:border-blue-600"
           >
             <option value="All">All Channels</option>
             {SOURCES.map((src) => (
@@ -91,7 +91,7 @@ export const LeadFilters: React.FC = () => {
           <select
             value={filters.counsellorId}
             onChange={(e) => setFilters((prev) => ({ ...prev, counsellorId: e.target.value }))}
-            className="px-3 py-2 bg-slate-100 dark:bg-[#0B131E] border border-slate-200 dark:border-[#202D3D] rounded-xl text-xs text-slate-800 dark:text-slate-200 font-bold focus:outline-none focus:border-[#FF6B00]"
+            className="px-3.5 py-2.5 bg-slate-100 border border-slate-300 rounded-xl text-sm text-slate-900 font-extrabold focus:outline-none focus:border-blue-600"
           >
             <option value="All">All Staff</option>
             {counsellors.map((c) => (
@@ -101,10 +101,10 @@ export const LeadFilters: React.FC = () => {
 
           <button
             onClick={() => setFilters((prev) => ({ ...prev, duplicateOnly: !prev.duplicateOnly }))}
-            className={`px-3 py-2 rounded-xl text-xs font-extrabold transition-all border ${
+            className={`px-4 py-2.5 rounded-xl text-sm font-black transition-all border ${
               filters.duplicateOnly
-                ? 'bg-rose-500/20 text-rose-600 dark:text-rose-300 border-rose-500/40'
-                : 'bg-slate-100 dark:bg-[#0B131E] text-slate-600 dark:text-slate-400 border-slate-200 dark:border-[#202D3D]'
+                ? 'bg-rose-100 text-rose-900 border-rose-400'
+                : 'bg-slate-100 text-slate-800 border-slate-300'
             }`}
           >
             Duplicates
@@ -112,7 +112,7 @@ export const LeadFilters: React.FC = () => {
 
           <button
             onClick={resetFilters}
-            className="px-3 py-2 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-200 dark:bg-slate-800 rounded-xl transition-colors"
+            className="px-4 py-2.5 text-sm font-black text-slate-600 hover:text-slate-900 bg-slate-200 rounded-xl transition-colors"
           >
             Reset
           </button>

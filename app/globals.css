@@ -2,29 +2,15 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-/* PRISTINE LIGHT-FIRST LEADSQUARED COLOR SYSTEM (PURE WHITE & SHARP BLACK) */
 :root {
-  --bg-primary: #f8fafc;
+  --bg-primary: #f1f5f9;
   --bg-surface: #ffffff;
-  --bg-header: #ffffff;
-  --border-subtle: #e2e8f0;
+  --bg-header: #0f172a;
+  --border-subtle: #cbd5e1;
   --text-main: #0f172a;
-  --text-muted: #64748b;
+  --text-muted: #475569;
   --ls-blue: #2563eb;
-  --ls-blue-hover: #1d4ed8;
-  --shadow-ls: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.03);
-}
-
-.dark {
-  --bg-primary: #0f172a;
-  --bg-surface: #1e293b;
-  --bg-header: #1e293b;
-  --border-subtle: #334155;
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --ls-blue: #3b82f6;
-  --ls-blue-hover: #60a5fa;
-  --shadow-ls: 0 4px 20px -2px rgba(0, 0, 0, 0.3);
+  --shadow-ls: 0 2px 4px 0 rgba(15, 23, 42, 0.06);
 }
 
 @layer base {
@@ -32,36 +18,34 @@
     background-color: var(--bg-primary);
     color: var(--text-main);
     font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: 14px; /* Increased base font size */
+    line-height: 1.5;
     overflow-x: hidden;
   }
 }
 
-/* Scrollbar */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #94a3b8;
   border-radius: 9999px;
 }
 
-/* LeadSquared White Surface Card */
+/* Card Surface */
 .ls-card {
   background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05);
-}
-.dark .ls-card {
-  background-color: #1e293b;
-  border-color: #334155;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.875rem;
+  box-shadow: 0 2px 4px 0 rgba(15, 23, 42, 0.05);
 }
 
-/* Slide-over Drawer Animation */
+/* Drawer Slide-In */
 @keyframes slideInRight {
   from { transform: translateX(100%); }
   to { transform: translateX(0); }

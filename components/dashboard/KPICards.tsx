@@ -6,8 +6,7 @@ import {
   IconUsers, 
   IconUserPlus, 
   IconPhone, 
-  IconGraduationCap, 
-  IconAlertTriangle 
+  IconGraduationCap 
 } from '@/components/ui/Icons';
 
 export const KPICards: React.FC = () => {
@@ -15,7 +14,6 @@ export const KPICards: React.FC = () => {
 
   const total = leads.length;
   const newLeads = leads.filter((l) => l.status === 'New').length;
-  const followUps = leads.filter((l) => l.status === 'Follow-up' || l.status === 'Contacted' || l.status === 'Counselling').length;
   const enrolled = leads.filter((l) => l.status === 'Enrolled').length;
   const highIntent = leads.filter((l) => (l.aiLeadScore || 0) >= 80).length;
 
@@ -27,58 +25,58 @@ export const KPICards: React.FC = () => {
       value: total,
       subtext: 'Active Lead Database',
       icon: IconUsers,
-      accentColor: 'text-[#0066FF]',
-      badgeBg: 'bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400',
+      accentColor: 'text-blue-600',
+      badgeBg: 'bg-blue-100 text-blue-800',
     },
     {
-      title: 'New Incoming',
+      title: 'New Incoming Queue',
       value: newLeads,
-      subtext: 'Unassigned / New Queue',
+      subtext: 'Action Required',
       icon: IconUserPlus,
-      accentColor: 'text-[#FF6B00]',
-      badgeBg: 'bg-orange-50 dark:bg-orange-500/10 text-orange-700 dark:text-orange-400',
+      accentColor: 'text-orange-600',
+      badgeBg: 'bg-orange-100 text-orange-800',
     },
     {
       title: 'High Intent Leads',
       value: highIntent,
       subtext: 'Score ≥ 80% 🔥',
       icon: IconPhone,
-      accentColor: 'text-amber-600 dark:text-amber-400',
-      badgeBg: 'bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400',
+      accentColor: 'text-amber-600',
+      badgeBg: 'bg-amber-100 text-amber-800',
     },
     {
       title: 'Students Enrolled',
       value: enrolled,
-      subtext: `${conversionRate}% Admissions Conversion`,
+      subtext: `${conversionRate}% Admission Rate`,
       icon: IconGraduationCap,
-      accentColor: 'text-emerald-600 dark:text-emerald-400',
-      badgeBg: 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400',
+      accentColor: 'text-emerald-600',
+      badgeBg: 'bg-emerald-100 text-emerald-800',
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
       {CARDS.map((card) => {
         const IconComponent = card.icon;
         return (
           <div
             key={card.title}
-            className="ls-card p-5 flex items-center justify-between transition-all hover:shadow-md"
+            className="ls-card p-6 flex items-center justify-between transition-all hover:shadow-md"
           >
             <div>
-              <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
+              <span className="text-xs font-black text-slate-500 uppercase tracking-wider block">
                 {card.title}
               </span>
-              <div className="text-2xl font-black text-slate-900 dark:text-white mt-1 font-mono tracking-tight">
+              <div className="text-3xl font-black text-slate-900 mt-1 font-mono tracking-tight">
                 {card.value}
               </div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">
+              <div className="text-xs text-slate-600 mt-1 font-bold">
                 {card.subtext}
               </div>
             </div>
 
-            <div className={`p-3 rounded-2xl ${card.badgeBg}`}>
-              <IconComponent className="w-6 h-6" />
+            <div className={`p-3.5 rounded-2xl ${card.badgeBg}`}>
+              <IconComponent className="w-7 h-7" />
             </div>
           </div>
         );
