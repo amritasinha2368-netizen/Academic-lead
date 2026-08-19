@@ -30,11 +30,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddModal, activeTab, setAc
 
   const [showNotifications, setShowNotifications] = useState(false);
 
-  const overdueCount = allLeadsUnfiltered.reduce((sum, l) => {
-    return sum + l.scheduledCalls.filter((c) => c.isOverdue).length;
+  const overdueCount = (allLeadsUnfiltered || []).reduce((sum, l) => {
+    const calls = l.scheduledCalls || [];
+    return sum + calls.filter((c) => c.isOverdue).length;
   }, 0);
 
-  const escalatedCount = allLeadsUnfiltered.filter((l) => l.escalatedToManager || l.status === 'Counselling').length;
+  const escalatedCount = (allLeadsUnfiltered || []).filter((l) => l.escalatedToManager || l.status === 'Counselling').length;
   const totalNotifications = overdueCount + escalatedCount;
 
   return (

@@ -89,8 +89,19 @@ const LeadContext = createContext<LeadContextType | undefined>(undefined);
 const STORAGE_KEY = 'aura_academy_leads_v2';
 const THEME_KEY = 'aura_crm_theme';
 
+const sanitizeLead = (lead: any): Lead => ({
+  ...lead,
+  status: lead.status || 'New',
+  source: lead.source || 'Homepage',
+  activityHistory: Array.isArray(lead.activityHistory) ? lead.activityHistory : [],
+  documents: Array.isArray(lead.documents) ? lead.documents : [],
+  payments: Array.isArray(lead.payments) ? lead.payments : [],
+  scheduledCalls: Array.isArray(lead.scheduledCalls) ? lead.scheduledCalls : [],
+  callRecordings: Array.isArray(lead.callRecordings) ? lead.callRecordings : [],
+});
+
 export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [leads, setLeads] = useState<Lead[]>(INITIAL_LEADS);
+  const [leads, setLeads] = useState<Lead[]>(() => INITIAL_LEADS.map(sanitizeLead));
   const [counsellors] = useState<Counsellor[]>(COUNSELLORS);
   const [activeView, setActiveView] = useState<'dashboard' | 'analytics' | 'website-sandbox'>('dashboard');
   const [kanbanViewMode, setKanbanViewMode] = useState<'board' | 'table'>('table');
@@ -124,7 +135,10 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        setLeads(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setLeads(parsed.map(sanitizeLead));
+        }
       }
       const savedTheme = localStorage.getItem(THEME_KEY) as 'light' | 'dark';
       if (savedTheme) {
@@ -311,7 +325,7 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
           return {
             ...lead,
             status: newStatus,
-            activityHistory: [newActivity, ...lead.activityHistory],
+            activityHistory: [newActivity, ...(lead.activityHistory || [])],
           };
         }
         return lead;
@@ -341,7 +355,7 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
           return {
             ...lead,
             assignedCounsellorId: counsellorId,
-            activityHistory: [newActivity, ...lead.activityHistory],
+            activityHistory: [newActivity, ...(lead.activityHistory || [])],
           };
         }
         return lead;
@@ -369,7 +383,7 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
           return {
             ...lead,
             status: newStatus,
-            activityHistory: [newActivity, ...lead.activityHistory],
+            activityHistory: [newActivity, ...(lead.activityHistory || [])],
           };
         }
         return lead;
@@ -393,7 +407,7 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
           return {
             ...lead,
             assignedCounsellorId: counsellorId,
-            activityHistory: [newActivity, ...lead.activityHistory],
+            activityHistory: [newActivity, ...(lead.activityHistory || [])],
           };
         }
         return lead;
@@ -425,7 +439,7 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
           return {
             ...lead,
             notes: lead.notes ? `${lead.notes}\n\n[${new Date().toLocaleDateString()}] ${noteText}` : noteText,
-            activityHistory: [newLog, ...lead.activityHistory],
+            activityHistory: [newLog, ...(lead.activityHistory || [])],
           };
         }
         return lead;
@@ -449,7 +463,7 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
             ...lead,
             status: 'Enrolled',
             enrolledStudentId: studentId,
-            activityHistory: [conversionLog, ...lead.activityHistory],
+            activityHistory: [conversionLog, ...(lead.activityHistory || [])],
           };
         }
         return lead;
@@ -478,8 +492,8 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
           };
           return {
             ...lead,
-            scheduledCalls: [newCall, ...lead.scheduledCalls],
-            activityHistory: [callLog, ...lead.activityHistory],
+            scheduledCalls: [newCall, ...(lead.scheduledCalls || [])],
+            activityHistory: [callLog, ...(lead.activityHistory || [])],
           };
         }
         return lead;
@@ -505,8 +519,8 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
           };
           return {
             ...lead,
-            documents: [newDoc, ...lead.documents],
-            activityHistory: [docLog, ...lead.activityHistory],
+            documents: [newDoc, ...(lead.documents || [])],
+            activityHistory: [docLog, ...(lead.activityHistory || [])],
           };
         }
         return lead;
@@ -533,8 +547,8 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
           };
           return {
             ...lead,
-            payments: [newPay, ...lead.payments],
-            activityHistory: [payLog, ...lead.activityHistory],
+            payments: [newPay, ...(lead.payments || [])],
+            activityHistory: [payLog, ...(lead.activityHistory || [])],
           };
         }
         return lead;
@@ -572,9 +586,9 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
             return {
               ...lead,
               isDuplicate: false,
-              activityHistory: [mergedActivity, ...lead.activityHistory, ...dupLead.activityHistory],
-              documents: [...lead.documents, ...dupLead.documents],
-              payments: [...lead.payments, ...dupLead.payments],
+              activityHistory: [mergedActivity, ...(lead.activityHistory || []), ...(dupLead.activityHistory || [])],
+              documents: [...(lead.documents || []), ...(dupLead.documents || [])],
+              payments: [...(lead.payments || []), ...(dupLead.payments || [])],
             };
           }
           return lead;
@@ -601,7 +615,7 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
           return {
             ...lead,
             status: lead.status === 'New' ? 'Contacted' : lead.status,
-            activityHistory: [callLog, ...lead.activityHistory],
+            activityHistory: [callLog, ...(lead.activityHistory || [])],
           };
         }
         return lead;
@@ -610,7 +624,8 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const resetData = () => {
-    setLeads(INITIAL_LEADS);
+    const clean = INITIAL_LEADS.map(sanitizeLead);
+    setLeads(clean);
     localStorage.removeItem(STORAGE_KEY);
     clearSelection();
     resetFilters();
@@ -622,12 +637,12 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return false;
       }
 
-      if (filters.searchQuery.trim() !== '') {
+      if (filters.searchQuery && filters.searchQuery.trim() !== '') {
         const query = filters.searchQuery.toLowerCase();
-        const nameMatch = lead.name.toLowerCase().includes(query);
-        const phoneMatch = lead.phone.toLowerCase().includes(query);
-        const emailMatch = lead.email.toLowerCase().includes(query);
-        const cityMatch = lead.city.toLowerCase().includes(query);
+        const nameMatch = lead.name?.toLowerCase().includes(query);
+        const phoneMatch = lead.phone?.toLowerCase().includes(query);
+        const emailMatch = lead.email?.toLowerCase().includes(query);
+        const cityMatch = lead.city?.toLowerCase().includes(query);
         if (!nameMatch && !phoneMatch && !emailMatch && !cityMatch) return false;
       }
 
