@@ -68,39 +68,39 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
   const renderChannelBadge = (source: string) => {
     if (source.includes('Instagram') || source.includes('Meta')) {
       return (
-        <span className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-black bg-pink-100 text-pink-900 border border-pink-300">
-          <IconInstagram className="w-4 h-4 text-pink-700 shrink-0" />
+        <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-pink-100 text-pink-900 border border-pink-300">
+          <IconInstagram className="w-3.5 h-3.5 text-pink-700 shrink-0" />
           <span>Instagram</span>
         </span>
       );
     }
     if (source.includes('Google')) {
       return (
-        <span className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-black bg-sky-100 text-sky-900 border border-sky-300">
-          <IconGoogle className="w-4 h-4 text-sky-700 shrink-0" />
+        <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-sky-100 text-sky-900 border border-sky-300">
+          <IconGoogle className="w-3.5 h-3.5 text-sky-700 shrink-0" />
           <span>Google Ads</span>
         </span>
       );
     }
     if (source.includes('Homepage') || source.includes('Website')) {
       return (
-        <span className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-black bg-indigo-100 text-indigo-900 border border-indigo-300">
-          <IconGlobe className="w-4 h-4 text-indigo-700 shrink-0" />
+        <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-100 text-indigo-900 border border-indigo-300">
+          <IconGlobe className="w-3.5 h-3.5 text-indigo-700 shrink-0" />
           <span>Website</span>
         </span>
       );
     }
     if (source.includes('Brochure')) {
       return (
-        <span className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-black bg-amber-100 text-amber-900 border border-amber-300">
-          <IconFileText className="w-4 h-4 text-amber-700 shrink-0" />
+        <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">
+          <IconFileText className="w-3.5 h-3.5 text-amber-700 shrink-0" />
           <span>Brochure Gate</span>
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-black bg-slate-100 text-slate-900 border border-slate-300">
-        <IconTag className="w-4 h-4 shrink-0" />
+      <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-900 border border-slate-300">
+        <IconTag className="w-3.5 h-3.5 shrink-0" />
         <span>{source}</span>
       </span>
     );
@@ -111,36 +111,36 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
       
       {/* Scrollable Table Wrapper */}
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm text-slate-900">
+        <table className="w-full text-left text-xs text-slate-900">
           
           {/* Table Header */}
-          <thead className="bg-slate-100 text-xs font-black text-slate-800 uppercase tracking-wider border-b border-slate-300">
+          <thead className="bg-slate-100 text-[11px] font-bold text-slate-700 uppercase tracking-wider border-b border-slate-300">
             <tr>
-              <th scope="col" className="p-4 w-12 text-center">
+              <th scope="col" className="p-3 w-10 text-center">
                 <input
                   type="checkbox"
                   checked={allVisibleSelected}
                   onChange={toggleSelectAll}
-                  className="rounded border-slate-400 bg-white text-blue-600 focus:ring-blue-500 h-4 w-4 cursor-pointer"
+                  className="rounded border-slate-400 bg-white text-blue-600 focus:ring-blue-500 h-3.5 w-3.5 cursor-pointer"
                 />
               </th>
-              <th scope="col" className="py-4 px-5 min-w-[220px]">Student / Contact</th>
-              <th scope="col" className="py-4 px-5 min-w-[200px]">Course Program</th>
-              <th scope="col" className="py-4 px-5 min-w-[140px]">Pipeline Stage</th>
-              <th scope="col" className="py-4 px-5 min-w-[160px]">Lead Channel Origin</th>
-              <th scope="col" className="py-4 px-5 min-w-[160px]">Assigned Counsellor</th>
-              <th scope="col" className="py-4 px-5 min-w-[130px]">Created Date</th>
-              <th scope="col" className="py-4 px-5 text-right min-w-[130px]">Actions</th>
+              <th scope="col" className="py-3 px-4 min-w-[200px]">Student / Contact</th>
+              <th scope="col" className="py-3 px-4 min-w-[190px]">Course Program</th>
+              <th scope="col" className="py-3 px-4 min-w-[130px]">Pipeline Stage</th>
+              <th scope="col" className="py-3 px-4 min-w-[150px]">Lead Channel Origin</th>
+              <th scope="col" className="py-3 px-4 min-w-[150px]">Assigned Counsellor</th>
+              <th scope="col" className="py-3 px-4 min-w-[120px]">Created Date</th>
+              <th scope="col" className="py-3 px-4 text-right min-w-[120px]">Actions</th>
             </tr>
           </thead>
 
-          {/* Table Body (14px Bold Text) */}
+          {/* Table Body (Average 13px Text) */}
           <tbody className="divide-y divide-slate-200 bg-white">
             {paginatedLeads.length === 0 ? (
               <tr>
-                <td colSpan={8} className="py-12 text-center text-slate-500 font-bold text-sm">
-                  <div className="flex flex-col items-center justify-center space-y-2">
-                    <IconAlertTriangle className="w-8 h-8 text-slate-400" />
+                <td colSpan={8} className="py-10 text-center text-slate-500 font-bold text-xs">
+                  <div className="flex flex-col items-center justify-center space-y-1.5">
+                    <IconAlertTriangle className="w-6 h-6 text-slate-400" />
                     <p>No leads found matching current filters.</p>
                   </div>
                 </td>
@@ -159,38 +159,38 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
                   >
                     
                     {/* Checkbox */}
-                    <td className="p-4 text-center">
+                    <td className="p-3 text-center">
                       <input
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => toggleSelectLead(lead.id)}
-                        className="rounded border-slate-400 bg-white text-blue-600 focus:ring-blue-500 h-4 w-4 cursor-pointer"
+                        className="rounded border-slate-400 bg-white text-blue-600 focus:ring-blue-500 h-3.5 w-3.5 cursor-pointer"
                       />
                     </td>
 
                     {/* Student Name & Score */}
-                    <td className="py-4 px-5">
-                      <div className="flex items-center space-x-3">
-                        <div className="h-10 w-10 rounded-xl bg-slate-900 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-sm">
+                    <td className="py-3 px-4">
+                      <div className="flex items-center space-x-2.5">
+                        <div className="h-8 w-8 rounded-lg bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-sm">
                           {lead.name.charAt(0)}
                         </div>
                         <div>
-                          <div className="flex items-center space-x-2">
+                          <div className="flex items-center space-x-1.5">
                             <span 
                               onClick={() => onSelectLeadDetail(lead)}
-                              className="font-extrabold text-slate-900 hover:text-blue-600 cursor-pointer transition-colors text-sm"
+                              className="font-bold text-slate-900 hover:text-blue-600 cursor-pointer transition-colors text-xs"
                             >
                               {lead.name}
                             </span>
 
                             {lead.aiLeadScore && (
-                              <span className="px-2 py-0.5 rounded text-xs font-mono font-black bg-amber-100 text-amber-900 border border-amber-300">
+                              <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-100 text-amber-900 border border-amber-300">
                                 🔥 {lead.aiLeadScore}
                               </span>
                             )}
                           </div>
 
-                          <div className="flex items-center space-x-2 text-xs text-slate-600 mt-1 font-bold">
+                          <div className="flex items-center space-x-2 text-[11px] text-slate-600 mt-0.5 font-semibold">
                             <span className="font-mono">{lead.phone}</span>
                             <span>•</span>
                             <span>{lead.city}</span>
@@ -200,21 +200,21 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
                     </td>
 
                     {/* Course */}
-                    <td className="py-4 px-5">
-                      <div className="font-extrabold text-slate-900 text-sm truncate max-w-[190px]" title={lead.course}>
+                    <td className="py-3 px-4">
+                      <div className="font-bold text-slate-900 text-xs truncate max-w-[180px]" title={lead.course}>
                         {lead.course}
                       </div>
-                      <div className="text-xs text-slate-600 font-bold mt-0.5">
+                      <div className="text-[11px] text-slate-600 font-semibold mt-0.5">
                         {lead.qualification}
                       </div>
                     </td>
 
                     {/* Lead Stage Select */}
-                    <td className="py-4 px-5">
+                    <td className="py-3 px-4">
                       <select
                         value={lead.status}
                         onChange={(e) => updateLeadStatus(lead.id, e.target.value as LeadStatus)}
-                        className={`text-xs font-black px-3 py-1.5 rounded-lg border focus:outline-none transition-all cursor-pointer ${getStatusBadgeStyle(lead.status)}`}
+                        className={`text-[11px] font-bold px-2 py-1 rounded-lg border focus:outline-none transition-all cursor-pointer ${getStatusBadgeStyle(lead.status)}`}
                       >
                         <option value="New">New</option>
                         <option value="Contacted">Contacted</option>
@@ -227,24 +227,24 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
                     </td>
 
                     {/* Channel Badge */}
-                    <td className="py-4 px-5">
+                    <td className="py-3 px-4">
                       {renderChannelBadge(lead.source)}
                     </td>
 
                     {/* Assigned Counsellor */}
-                    <td className="py-4 px-5">
+                    <td className="py-3 px-4">
                       <div className="flex items-center space-x-2">
                         {assignedCounsellor ? (
                           <>
                             <img
                               src={assignedCounsellor.avatar}
                               alt={assignedCounsellor.name}
-                              className="w-6 h-6 rounded-full object-cover border border-slate-300"
+                              className="w-5 h-5 rounded-full object-cover border border-slate-300"
                             />
                             <select
                               value={lead.assignedCounsellorId || ''}
                               onChange={(e) => assignCounsellor(lead.id, e.target.value)}
-                              className="bg-transparent text-xs text-slate-900 font-extrabold focus:outline-none cursor-pointer"
+                              className="bg-transparent text-xs text-slate-900 font-bold focus:outline-none cursor-pointer"
                             >
                               {counsellors.map((c) => (
                                 <option key={c.id} value={c.id} className="bg-white text-slate-900">
@@ -260,42 +260,42 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
                     </td>
 
                     {/* Date Added */}
-                    <td className="py-4 px-5 text-xs text-slate-600 font-mono font-bold">
+                    <td className="py-3 px-4 text-[11px] text-slate-600 font-mono font-bold">
                       {formatDateString(lead.dateAdded)}
                     </td>
 
                     {/* Actions */}
-                    <td className="py-4 px-5 text-right">
-                      <div className="flex items-center justify-end space-x-2">
+                    <td className="py-3 px-4 text-right">
+                      <div className="flex items-center justify-end space-x-1.5">
                         <button
                           onClick={() => openDialer(lead)}
-                          className="p-2 text-emerald-700 hover:bg-emerald-100 rounded-lg transition-colors"
+                          className="p-1 text-emerald-700 hover:bg-emerald-100 rounded transition-colors"
                           title="Call Softphone"
                         >
-                          <IconPhone className="w-4 h-4" />
+                          <IconPhone className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => openMessageComposer(lead, 'whatsapp')}
-                          className="p-2 text-blue-700 hover:bg-blue-100 rounded-lg transition-colors"
+                          className="p-1 text-blue-700 hover:bg-blue-100 rounded transition-colors"
                           title="Send WhatsApp"
                         >
-                          <IconMessageSquare className="w-4 h-4" />
+                          <IconMessageSquare className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => onSelectLeadDetail(lead)}
-                          className="p-2 text-slate-700 hover:bg-slate-200 rounded-lg transition-colors"
+                          className="p-1 text-slate-700 hover:bg-slate-200 rounded transition-colors"
                           title="View 360° Profile"
                         >
-                          <IconEye className="w-4 h-4" />
+                          <IconEye className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => {
                             if (confirm(`Delete lead "${lead.name}"?`)) deleteLead(lead.id);
                           }}
-                          className="p-2 text-slate-400 hover:text-rose-600 rounded-lg transition-colors"
+                          className="p-1 text-slate-400 hover:text-rose-600 rounded transition-colors"
                           title="Delete"
                         >
-                          <IconTrash className="w-4 h-4" />
+                          <IconTrash className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     </td>
@@ -310,19 +310,19 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
       </div>
 
       {/* Pagination Footer */}
-      <div className="bg-slate-100 px-6 py-3.5 border-t border-slate-300 flex items-center justify-between text-xs text-slate-700 font-bold">
+      <div className="bg-slate-100 px-5 py-2.5 border-t border-slate-300 flex items-center justify-between text-xs text-slate-700 font-bold">
         <div>
-          Showing <span className="font-black text-slate-900">{leads.length > 0 ? startIndex + 1 : 0}</span> to{' '}
-          <span className="font-black text-slate-900">{Math.min(startIndex + itemsPerPage, leads.length)}</span> of{' '}
-          <span className="font-black text-slate-900">{leads.length}</span> entries
+          Showing <span className="font-bold text-slate-900">{leads.length > 0 ? startIndex + 1 : 0}</span> to{' '}
+          <span className="font-bold text-slate-900">{Math.min(startIndex + itemsPerPage, leads.length)}</span> of{' '}
+          <span className="font-bold text-slate-900">{leads.length}</span> entries
         </div>
 
         {totalPages > 1 && (
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1.5">
             <button
               onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
               disabled={currentPage === 1}
-              className="px-3 py-1.5 bg-white text-slate-800 rounded-lg border border-slate-300 disabled:opacity-40 hover:bg-slate-50 font-bold text-xs"
+              className="px-2.5 py-1 bg-white text-slate-800 rounded border border-slate-300 disabled:opacity-40 hover:bg-slate-50 font-bold text-xs"
             >
               Prev
             </button>
@@ -332,7 +332,7 @@ export const LeadTable: React.FC<LeadTableProps> = ({ onSelectLeadDetail }) => {
             <button
               onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
               disabled={currentPage === totalPages}
-              className="px-3 py-1.5 bg-white text-slate-800 rounded-lg border border-slate-300 disabled:opacity-40 hover:bg-slate-50 font-bold text-xs"
+              className="px-2.5 py-1 bg-white text-slate-800 rounded border border-slate-300 disabled:opacity-40 hover:bg-slate-50 font-bold text-xs"
             >
               Next
             </button>

@@ -55,28 +55,28 @@ export const KPICards: React.FC = () => {
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {CARDS.map((card) => {
         const IconComponent = card.icon;
         return (
           <div
             key={card.title}
-            className="ls-card p-6 flex items-center justify-between transition-all hover:shadow-md"
+            className="ls-card p-4 flex items-center justify-between transition-all hover:shadow-md"
           >
             <div>
-              <span className="text-xs font-black text-slate-500 uppercase tracking-wider block">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
                 {card.title}
               </span>
-              <div className="text-3xl font-black text-slate-900 mt-1 font-mono tracking-tight">
+              <div className="text-2xl font-bold text-slate-900 mt-0.5 font-mono tracking-tight">
                 {card.value}
               </div>
-              <div className="text-xs text-slate-600 mt-1 font-bold">
+              <div className="text-xs text-slate-600 mt-0.5 font-medium">
                 {card.subtext}
               </div>
             </div>
 
-            <div className={`p-3.5 rounded-2xl ${card.badgeBg}`}>
-              <IconComponent className="w-7 h-7" />
+            <div className={`p-3 rounded-xl ${card.badgeBg}`}>
+              <IconComponent className="w-5 h-5" />
             </div>
           </div>
         );
