@@ -2,39 +2,44 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+/* BRAND NEW LUXURY COLOR PALETTE (Stripe / Apple / Linear Style) */
 :root {
   --bg-primary: #f8fafc;
-  --bg-secondary: #ffffff;
-  --bg-card: #ffffff;
-  --border-color: #e2e8f0;
-  --text-primary: #0f172a;
-  --text-secondary: #64748b;
-  --accent-color: #4f46e5;
-  --shadow-style: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  --bg-surface: #ffffff;
+  --bg-muted: #f1f5f9;
+  --border-subtle: #e2e8f0;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --primary-accent: #4f46e5;
+  --primary-accent-hover: #4338ca;
+  --primary-light: #eeeffe;
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
 }
 
 .dark {
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --bg-card: #1e293b;
-  --border-color: #334155;
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --accent-color: #6366f1;
-  --shadow-style: none;
+  --bg-primary: #0b0f19;
+  --bg-surface: #131b2e;
+  --bg-muted: #1e293b;
+  --border-subtle: #232d42;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --primary-accent: #6366f1;
+  --primary-accent-hover: #818cf8;
+  --primary-light: rgba(99, 102, 241, 0.15);
+  --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
 }
 
 @layer base {
   body {
     background-color: var(--bg-primary);
-    color: var(--text-primary);
-    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    color: var(--text-main);
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
     overflow-x: hidden;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: background-color 0.25s ease, color 0.25s ease;
   }
 }
 
-/* Custom Scrollbar */
+/* Custom Clean Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -50,23 +55,23 @@
   background: #334155;
 }
 
-/* Clean Card Utility */
+/* Premium Surface Class */
 .clean-surface {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
   border-radius: 1rem;
-  box-shadow: var(--shadow-style);
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  box-shadow: var(--shadow-card);
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .clean-surface:hover {
   border-color: #cbd5e1;
 }
 .dark .clean-surface:hover {
-  border-color: #475569;
+  border-color: #334155;
 }
 
-/* Slide-over & Fade Animations */
+/* Slide-over Drawer Animation */
 @keyframes slideInRight {
   from { transform: translateX(100%); }
   to { transform: translateX(0); }
@@ -77,7 +82,7 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(2px); }
+  from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
