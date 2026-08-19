@@ -34,17 +34,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
     <aside className="w-60 bg-white border-r border-slate-300 flex flex-col justify-between shrink-0 hidden md:flex transition-colors">
       
       {/* Brand Header */}
-      <div className="p-5 border-b border-slate-200 flex items-center space-x-2.5">
-        <div className="h-9 w-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-extrabold shadow-sm">
-          <IconShieldCheck className="w-5 h-5" />
+      <div className="p-5 border-b border-slate-200 flex items-center space-x-3">
+        <div className="h-10 w-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-extrabold shadow-sm">
+          <IconShieldCheck className="w-6 h-6" />
         </div>
         <div>
-          <div className="font-extrabold text-sm text-slate-900 tracking-tight">LeadSquared</div>
-          <div className="text-[11px] text-slate-500 font-bold">Academy CRM</div>
+          <div className="font-black text-base text-slate-900 tracking-tight">CampusDirect</div>
+          <div className="text-[11px] text-slate-500 font-bold">12th Pass Admissions</div>
         </div>
       </div>
 
-      {/* Navigation Items (13px Font) */}
+      {/* Navigation Items */}
       <nav className="p-3 space-y-1 flex-1 overflow-y-auto">
         <div className="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
           Main Navigation

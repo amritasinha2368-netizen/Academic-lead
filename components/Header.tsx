@@ -39,18 +39,18 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddModal, activeTab, setAc
       {/* Brand Logo & Search */}
       <div className="flex items-center space-x-10 flex-1 max-w-3xl">
         
-        {/* Crisp Royal Blue Logo Badge */}
+        {/* CampusDirect Logo Badge */}
         <div className="flex items-center space-x-4 shrink-0">
           <div className="h-12 w-12 rounded-2xl bg-[#2563EB] text-white flex items-center justify-center font-black shadow-lg shadow-blue-600/30">
             <IconShieldCheck className="w-7 h-7 text-white" />
           </div>
           <div>
-            <div className="font-black text-xl text-[#0F172A] tracking-tight leading-none">LeadSquared</div>
-            <div className="text-xs text-[#1E40AF] font-extrabold mt-1">Academy Admissions CRM</div>
+            <div className="font-black text-xl text-[#0F172A] tracking-tight leading-none">CampusDirect</div>
+            <div className="text-xs text-[#1E40AF] font-extrabold mt-1">12th Pass Admissions Suite</div>
           </div>
         </div>
 
-        {/* Global Search Input (Roomy & High Contrast) */}
+        {/* Global Search Input */}
         <div className="relative w-full max-w-lg hidden md:block">
           <IconSearch className="w-4 h-4 text-[#2563EB] absolute left-4 top-3.5" />
           <input
